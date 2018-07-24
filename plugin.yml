@@ -1,0 +1,28 @@
+name: 9txCore
+main: org.realcodingteam.plan9.NtxPlugin
+version: 1.0
+authors: [ProfLuz, Danny]
+api-version: 1.13
+commands:
+   addks:
+      description: Adds a killstreak to a weapon
+      usage: /<command>
+   donor:
+      description: Opens the donor menu
+      usage: /<command> [help|xp|ores|potion|misc|nick]
+permissions:
+   ntx.*:
+      description: Gives access to all permissions
+      children:
+         ntx.ks: true
+         ntx.build: true
+         ntx.donor: true
+         ntx.donor.add: true
+   ntx.ks:
+      description: Gives access to the addks command
+   ntx.donor:
+      description: Gives access to the donor command
+   ntx.donor.add:
+      description: Gives access to the donor add subcommand
+   ntx.build:
+      description: Allows building on the nether roof
