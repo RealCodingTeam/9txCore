@@ -6,11 +6,9 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.World.Environment;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.LingeringPotion;
@@ -23,14 +21,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
@@ -72,11 +71,22 @@ public class NtxNerfListener implements Listener {
 		//Disable moving shulker boxes into enderchests (you can move them out into normal inventory)
 		if(event.getCurrentItem() == null) return;
 		
+		if (event.getClick() == ClickType.NUMBER_KEY) {
+			ItemStack item = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
+			
+			if (item != null && item.getType().name().contains("SHULKER_BOX")) {
+				event.getWhoClicked().sendMessage("§c§lShulker boxes are not allowed in enderchests.");
+				event.setCancelled(true);
+				return;
+			}
+		}
+		
 		if(event.getCurrentItem().getType().name().contains("SHULKER_BOX") && event.getView().getType() == InventoryType.ENDER_CHEST) {
 			if(event.getClickedInventory().getType() == InventoryType.ENDER_CHEST) return;
+			
 			event.setCancelled(true);
 			Player player = (Player) event.getWhoClicked();
-			player.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "Shulker boxes are not allowed in enderchests.");
+			player.sendMessage("§c§lShulker boxes are not allowed in enderchests.");
 		}
 		
 		//Convert tipped arrows to normal arrows
@@ -173,6 +183,15 @@ public class NtxNerfListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerBuild(BlockPlaceEvent event) {
+		World world = event.getBlock().getWorld();
+		
+		if(event.getBlock().getType().name().endsWith("_BED")) {
+			if(world.getEnvironment() == Environment.NETHER || world.getEnvironment() == Environment.THE_END) {
+				event.setCancelled(true);
+				return;
+			}
+		}
+		
 		//Disable building on the nether roof, unless the player is /op or has the permission "ntx.build"
 		if(event.getPlayer().isOp() || event.getPlayer().hasPermission("ntx.build")) return;
 		
@@ -210,28 +229,15 @@ public class NtxNerfListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onJoin(PlayerJoinEvent event) {
-		Player p = event.getPlayer();
-		String uuid = p.getUniqueId().toString().replaceAll("-", "");
-		
-		//Make players attack so quickly that it's like 1.8
-		p.getAttribute(Attribute.GENERIC_ATTACK_SPEED).addModifier(new AttributeModifier("generic.attackSpeed", 99999999.0D, AttributeModifier.Operation.ADD_NUMBER));
-		
-		if(uuid.equalsIgnoreCase("cfa295f9e01f44f593a22e4271d7e015")) {
-			p.removePotionEffect(PotionEffectType.GLOWING);
-			try {
-				Bukkit.getServer().getScoreboardManager().getMainScoreboard().registerNewTeam("dummyteam").setColor(ChatColor.BLACK);
-			} catch(IllegalArgumentException e) {}
-			Bukkit.getServer().getScoreboardManager().getMainScoreboard().getTeam("dummyteam").addPlayer(p);
-			p.setDisplayName(ChatColor.stripColor(p.getName()));
-			p.setPlayerListName(ChatColor.stripColor(p.getName()));
-			p.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 0, false, false, Color.SILVER), true);
+	public void onDMG(EntityDamageByEntityEvent event) {
+		if (!(event.getDamager() instanceof Player)) {
+			return;
 		}
 		
-		//And here is how we do display names then lol
-		if(NtxPlugin.instance.getConfig().contains("nick." + uuid)) {
-			p.setDisplayName(ChatColor.getByChar(NtxPlugin.instance.getConfig().getString("nick." + uuid)) + p.getName() + ChatColor.RESET);
-			p.setPlayerListName(ChatColor.getByChar(NtxPlugin.instance.getConfig().getString("nick." + uuid)) + p.getName() + ChatColor.RESET);
+		Player player = (Player) event.getDamager();
+		
+		if (player.getInventory().getItemInMainHand().getType().name().contains("_AXE")) {
+			event.setDamage(event.getDamage() - 5.5);
 		}
 	}
 }

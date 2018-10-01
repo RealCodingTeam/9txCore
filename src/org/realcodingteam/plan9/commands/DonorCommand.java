@@ -10,9 +10,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.realcodingteam.plan9.objects.DonorMenu;
+import org.realcodingteam.plan9.objects.DonorPlayer;
 
 public class DonorCommand implements CommandExecutor {
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		
@@ -22,7 +24,7 @@ public class DonorCommand implements CommandExecutor {
 		}
 		
 		if (!(sender instanceof Player)) {
-			tryAdd(sender, args);
+			tryAdd(sender, args, true);
 			return true;
 		}
 		
@@ -35,7 +37,26 @@ public class DonorCommand implements CommandExecutor {
 		
 		switch (args[0].toLowerCase()) {
 		case "add":
-			tryAdd(sender, args);
+			tryAdd(sender, args, true);
+			break;
+		case "set":
+			tryAdd(sender, args, false);
+			break;
+		case "view":
+			if (player.hasPermission("ntx.donor.view")) {
+				if (args.length > 1) {
+					OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+					
+					if (target != null) {
+						DonorPlayer dp = DonorPlayer.getDonorPlayer(target.getUniqueId());
+						
+						player.sendMessage(ChatColor.GOLD + args[1] + ChatColor.GREEN + ": DP Balance is " + ChatColor.GOLD + dp.getDp());
+						return true;
+					}
+				}
+			}
+			
+			sender.sendMessage(ChatColor.RED + "§cYou lack permission");
 			break;
 		case "xp":
 			DonorMenu.openXP(player);
@@ -44,7 +65,7 @@ public class DonorCommand implements CommandExecutor {
 			DonorMenu.openOres(player);
 			break;
 		case "help":
-			player.sendMessage(ChatColor.GREEN + "Try /donor [§2xp§a|§2ores§a|§2potion§a|§2nick§a|§2misc§a]");
+			player.sendMessage(ChatColor.GREEN + "§eTry /donor [§2xp§a|§2ores§a|§2potion§a|§2nick§a|§2misc§a]");
 			break;
 		case "potion":
 			DonorMenu.openPotion(player);
@@ -63,32 +84,39 @@ public class DonorCommand implements CommandExecutor {
 		return true;
 	}
 
-	public boolean tryAdd(CommandSender sender, String[] args) {
+	@SuppressWarnings("deprecation")
+	public boolean tryAdd(CommandSender sender, String[] args, boolean add) {
 		
 		if (args.length > 2) {
-			if (args[0].equalsIgnoreCase("add")) {
+			if (args[0].equalsIgnoreCase("add") || args[0].equalsIgnoreCase("set")) {
 				if (sender.hasPermission("ntx.donor.add")) {
-					UUID id = UUID.fromString(args[1]);				
-					OfflinePlayer player = Bukkit.getOfflinePlayer(id);
-					int amount = 0; 
+					OfflinePlayer player = null;
+					int amount = 0;
 					
+					if (args[1].matches("[0-9a-f]{8}[-]*[0-9a-f]{4}[-]*[1-5][0-9a-f]{3}[-]*[89ab][0-9a-f]{3}[-]*[0-9a-f]{12}")) {
+						player = Bukkit.getOfflinePlayer(UUID.fromString(args[1]));
+					} else {
+						player = Bukkit.getOfflinePlayer(args[1]);
+					}
+				
 					if (player == null) {
-						sender.sendMessage("That player does not exist!");
+						sender.sendMessage("§cThat player does not exist!");
 						return false;
 					}
 					
 					try {
-						amount = Integer.parseInt(args[2]) + DonorMenu.points.getOrDefault(id, 0);
+						DonorPlayer tp = DonorPlayer.getDonorPlayer(player.getUniqueId());
+						amount = Integer.parseInt(args[2]);
 						
-						DonorMenu.points.put(id, amount);
-						sender.sendMessage("Success! " + player.getName() + " now has " + amount);
-						if (player.isOnline()) {
-							Player target = (Player) player;
-							target.sendMessage(ChatColor.GREEN + "You now have " + ChatColor.GOLD + amount + ChatColor.GREEN + "DP");
-						}
+						if (add) {
+							amount += tp.getDp();
+						} 
+						
+						tp.setDp(amount);
+						sender.sendMessage("§aSuccess! " + player.getName() + " now has " + amount);
 						return true;
 					} catch (NumberFormatException e) {
-						sender.sendMessage("Format is /donor add <uuid> <amount>");
+						sender.sendMessage("§cFormat is /donor add <uuid> <amount>");
 						return false;
 					}
 				}
