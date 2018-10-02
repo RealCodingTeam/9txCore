@@ -37,7 +37,7 @@ public class KSCommand implements CommandExecutor {
 			
 			return true;
 		} else {
-			player.sendMessage(ChatColor.RED + "You can only apply killsteaks to a sword, axe, trident, or a bow!");
+			player.sendMessage(ChatColor.RED + "You can only apply killstreaks to a sword, axe, trident, or a bow!");
 			return true;
 		}
 		
@@ -63,9 +63,11 @@ public class KSCommand implements CommandExecutor {
 		return true;
 	}
 	
-	public static void doKS(ItemStack item) {
-		ItemMeta meta = item.getItemMeta(); 
+	public static void doKS(ItemStack item) {	
+		if (!item.hasItemMeta()) return;
 		
+		ItemMeta meta = item.getItemMeta(); 
+			
 		if(!meta.hasLore()) return;
 		
 		List<String> lore = meta.getLore();

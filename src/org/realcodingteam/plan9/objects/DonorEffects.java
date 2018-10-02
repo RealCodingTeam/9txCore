@@ -7,6 +7,7 @@ import java.util.AbstractMap.SimpleEntry;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.World;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.realcodingteam.plan9.DonorListener;
@@ -60,6 +61,12 @@ public final class DonorEffects {
 		//Change time to day
 		registry.put(new SimpleEntry<Material,Integer>(Material.SUNFLOWER, 10), () -> Bukkit.getWorlds().forEach(w -> w.setTime(1000)));
 		
+		//Change weather to clear
+		registry.put(new SimpleEntry<Material,Integer>(Material.BUCKET, 10), () -> Bukkit.getWorld("world").setStorm(false));
+		
+		//Change weather to stormy
+		registry.put(new SimpleEntry<Material,Integer>(Material.WATER_BUCKET, 100), () -> setStorm(Bukkit.getWorld("world")));
+		
 		//Give XP levels
 		registry.put(new SimpleEntry<Material,Integer>(Material.EXPERIENCE_BOTTLE, 15), () -> Bukkit.getOnlinePlayers().forEach(p -> p.giveExp(160)));
 		registry.put(new SimpleEntry<Material,Integer>(Material.EXPERIENCE_BOTTLE, 30), () -> Bukkit.getOnlinePlayers().forEach(p -> p.giveExp(550)));
@@ -72,6 +79,11 @@ public final class DonorEffects {
 		}
 		
 		DonorListener.doubleOreTime += time;
+	}
+	
+	private static void setStorm(World world) {
+		world.setStorm(true);
+		world.setThundering(true);
 	}
 
 	public static Runnable getEffect(Material material, int cost) {

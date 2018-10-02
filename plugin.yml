@@ -10,6 +10,10 @@ commands:
    donor:
       description: Opens the donor menu
       usage: /<command> [help|xp|ores|potion|misc|nick]
+   staff:
+      description: Staff chat
+      usage: /<command> [msg]
+      aliases: [staffchat, schat, sc]
 permissions:
    ntx.*:
       description: Gives access to all permissions
@@ -18,6 +22,7 @@ permissions:
          ntx.build: true
          ntx.donor: true
          ntx.donor.add: true
+         ntx.staff: true
    ntx.ks:
       description: Gives access to the addks command
    ntx.donor:
@@ -26,3 +31,5 @@ permissions:
       description: Gives access to the donor add subcommand
    ntx.build:
       description: Allows building on the nether roof
+   ntx.staff:
+      description: Gives access to staff chat
