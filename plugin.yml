@@ -1,0 +1,29 @@
+name: 9txCore
+main: org.realcodingteam.plan9.NtxPlugin
+version: 1.0
+authors: [Danny, ProfLuz]
+api-version: 1.13
+commands:
+   donor:
+      description: Opens the donor menu
+      usage: /<command> [help|xp|ores|potion|misc|nick]
+   staff:
+      description: Staff chat
+      usage: /<command> [msg]
+      aliases: [staffchat, schat, sc]
+permissions:
+   ntx.*:
+      description: Gives access to all permissions
+      children:
+         ntx.build: true
+         ntx.donor: true
+         ntx.donor.add: true
+         ntx.staff: true
+   ntx.donor:
+      description: Gives access to the donor command
+   ntx.donor.add:
+      description: Gives access to the donor add subcommand
+   ntx.build:
+      description: Allows building on the nether roof
+   ntx.staff:
+      description: Gives access to staff chat
