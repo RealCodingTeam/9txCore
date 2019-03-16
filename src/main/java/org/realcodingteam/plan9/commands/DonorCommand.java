@@ -74,7 +74,51 @@ public class DonorCommand implements CommandExecutor {
                 new NickMenu(player);
                 break;
             case "help":
-                player.sendMessage(ChatColor.GREEN + "§eTry /donor [§2xp§a|§2ores§a|§2potion§a|§2nick§a|§2misc§a]");
+                player.sendMessage(ChatColor.GREEN + "§eTry /donor [§2xp§a|§2ores§a|§2potion§a|§2nick§a|§2misc§a|§2pay§a]");
+                break;
+            case "pay":
+            case "send":
+                if(args.length < 2) {
+                    player.sendMessage(ChatColor.RED + "Usage: /donor " + args[0] + " <player> <amount>");
+                    return true;
+                }
+                
+                Player target = Bukkit.getPlayer(args[1]);
+                if(target == null) {
+                    player.sendMessage(ChatColor.RED + "Player not found.");
+                    return true;
+                }
+                
+                int amount = 0;
+                try {
+                    amount = (int)Double.parseDouble(args[2]);
+                } catch(Exception e) {
+                    player.sendMessage(ChatColor.RED + "That is not a valid payment.");
+                    return true;
+                }
+                
+                if(amount <= 0) {
+                    player.sendMessage(ChatColor.RED + "You must send at least 1 donor point.");
+                    return true;
+                }
+                
+                DonorPlayer donor = DonorPlayer.getDonorPlayer(player.getUniqueId());
+                DonorPlayer reciever = DonorPlayer.getDonorPlayer(target.getUniqueId());
+                
+                if(donor.getDp() < amount) {
+                    player.sendMessage(ChatColor.RED + "You do not have enough donor points to do this.");
+                    return true;
+                }
+                
+                donor.setDp(donor.getDp() - amount);
+                reciever.setDp(reciever.getDp() + amount);
+                DonorPlayer.saveDonor(donor);
+                DonorPlayer.saveDonor(reciever);
+                
+                String to = "§aYou have donated %d donor points to %s§a!";
+                String from = "§aYou recieved %d donor points from %s§a!";
+                player.sendMessage(String.format(to, amount, target.getDisplayName()));
+                target.sendMessage(String.format(from, amount, player.getDisplayName()));
                 break;
             default:
                 new RootMenu(player);
