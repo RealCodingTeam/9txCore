@@ -1,6 +1,7 @@
 package org.realcodingteam.plan9.commands;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +25,15 @@ public class StaffChatCommand implements CommandExecutor, Listener {
 	
 	private static final String FORMAT = "§3Staff §8>> §9%s§8: §f%s";
 	private static final List<UUID> chatPlayers = new ArrayList<>();
+	
+	private static String getOnlineStaff() {
+		String[] names = Bukkit.getOnlinePlayers().stream()
+				  .filter(p -> p.hasPermission("ntx.staff"))
+				  .map(Player::getDisplayName)
+				  .map(n -> n + "§r")
+				  .toArray(String[]::new);
+		return "§bOnline staff: §r" + Arrays.toString(names);
+	}
 	
 	//Remove a player from staff chat
 	public static void takeOutOfStaffChat(Player p) {
@@ -70,6 +80,11 @@ public class StaffChatCommand implements CommandExecutor, Listener {
 				return true;
 			}
 			
+			if(args[0].equalsIgnoreCase(".") && args.length < 2) {
+				sender.sendMessage(getOnlineStaff());
+				return true;
+			}
+			
 			//Send the console's message in staff chat
 			name = ChatColor.RED + "" + "[CONSOLE]";
 			msg = String.join(" ", args);
@@ -104,9 +119,17 @@ public class StaffChatCommand implements CommandExecutor, Listener {
 			return true;
 		}
 		
+		if(args[0].equalsIgnoreCase(".") && args.length < 2) {
+			sender.sendMessage(getOnlineStaff());
+			return true;
+		}
+		
 		//They sent a message after the command, send it in staff chat.
 		name = p.getDisplayName().replace("[CONSOLE]", "[noob]");
 		msg = String.join(" ", args);
+		msg = ChatColor.translateAlternateColorCodes('^', msg);
+		msg = msg.replace("" + ChatColor.MAGIC, "")
+				 .replace("" + ChatColor.STRIKETHROUGH, "");
 		
 		sendStaffMessage(name, msg);
 		return true;
@@ -123,11 +146,12 @@ public class StaffChatCommand implements CommandExecutor, Listener {
 				return;
 			}
 			event.setCancelled(true);
-			sendStaffMessage(p.getName(), event.getMessage());
+			sendStaffMessage(p.getDisplayName(), event.getMessage());
 		}
 	}
 	
 	//Inform players which chat they are in.
+	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		if(!event.getPlayer().hasPermission("ntx.staff")) return;
 		if(isInStaffChat(event.getPlayer())) {
