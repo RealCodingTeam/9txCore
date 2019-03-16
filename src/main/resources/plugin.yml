@@ -2,6 +2,7 @@ name: 9txCore
 main: org.realcodingteam.plan9.NtxPlugin
 version: 1.0
 authors: [Danny, ProfLuz]
+softdepend: [ProtocolLib]
 api-version: 1.13
 commands:
    donor:

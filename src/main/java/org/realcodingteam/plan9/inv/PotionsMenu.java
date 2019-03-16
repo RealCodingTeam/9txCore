@@ -38,8 +38,8 @@ public class PotionsMenu extends AbstractMenu {
 		
 		inv.setItem(29, makeItem(Material.HEART_OF_THE_SEA, 1, "§5Dolphin's Grace - 50 DP", "§aDolphin's grace for 2 minutes"));
 		inv.setItem(31, makeItem(Material.MAGMA_CREAM, 1, "§5Fire Resistance - 30 DP", "§aFire resistance for 4 minutes"));
-		inv.setItem(33, makeItem(Material.CONDUIT, 1, "§5Conduit Power - 100 DP", "§aConduit power for 4 minutes", "§aWater breathing, underwater breathing, and water vision"));
-		inv.setItem(27, makeItem(Material.FEATHER, 1, "§6Levitation - 1000 DP", "§eLevitation for 1 second"));
+		inv.setItem(33, makeItem(Material.CONDUIT, 1, "§5Conduit Power - 100 DP", "§aConduit power for 4 minutes", "§aWater breathing, night vision, and haste"));
+		inv.setItem(27, makeItem(Material.FEATHER, 1, "§5Slow Falling - 30 DP", "§aSlow falling for 3 minutes"));
 	}
 
 	@Override

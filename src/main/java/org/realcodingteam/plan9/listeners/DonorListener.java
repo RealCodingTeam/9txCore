@@ -1,5 +1,6 @@
 package org.realcodingteam.plan9.listeners;
 
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -17,8 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import org.realcodingteam.plan9.inv.AbstractMenu;
 import org.realcodingteam.plan9.objects.DonorPlayer;
 import org.realcodingteam.plan9.objects.effects.OreEffects;
-
-import net.md_5.bungee.api.ChatColor;
 
 public class DonorListener implements Listener {
 

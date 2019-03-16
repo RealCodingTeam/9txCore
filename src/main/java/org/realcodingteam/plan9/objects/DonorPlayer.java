@@ -7,13 +7,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.realcodingteam.plan9.NtxPlugin;
-
-import net.md_5.bungee.api.ChatColor;
 
 public class DonorPlayer {
 	

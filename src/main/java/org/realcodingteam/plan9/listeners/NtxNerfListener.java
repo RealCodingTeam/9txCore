@@ -11,11 +11,8 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EnderPearl;
-import org.bukkit.entity.LingeringPotion;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Stray;
 import org.bukkit.entity.ThrownPotion;
-import org.bukkit.entity.TippedArrow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -37,7 +34,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.realcodingteam.plan9.NtxPlugin;
-
 
 @SuppressWarnings("deprecation")
 public class NtxNerfListener implements Listener {
@@ -91,10 +87,10 @@ public class NtxNerfListener implements Listener {
 		}
 		
 		//Convert tipped arrows to normal arrows
-		if(event.getCurrentItem().getType() == Material.TIPPED_ARROW) {
-			event.getCurrentItem().setType(Material.ARROW);
-			event.getCurrentItem().setItemMeta(null);
-		}
+//		if(event.getCurrentItem().getType() == Material.TIPPED_ARROW) {
+//			event.getCurrentItem().setType(Material.ARROW);
+//			event.getCurrentItem().setItemMeta(null);
+//		}
 	}
 	
 	@EventHandler
@@ -109,20 +105,20 @@ public class NtxNerfListener implements Listener {
 			}
 		}
 		
-		if(event.getItem().getType() == Material.LINGERING_POTION) {
-			event.getPlayer().sendMessage("" + ChatColor.RED + ChatColor.BOLD + "Lingering potions are disabled.");
-			event.setCancelled(true);
-			return;
-		}
+//		if(event.getItem().getType() == Material.LINGERING_POTION) {
+//			event.getPlayer().sendMessage("" + ChatColor.RED + ChatColor.BOLD + "Lingering potions are disabled.");
+//			event.setCancelled(true);
+//			return;
+//		}
 		
 		if(event.getItem().getType() == Material.POTION || event.getItem().getType() == Material.SPLASH_POTION) {
 			PotionMeta pm = (PotionMeta) event.getItem().getItemMeta();
 			PotionType type = pm.getBasePotionData().getType();
 			if(type.equals(PotionType.INSTANT_DAMAGE)
-			|| type.equals(PotionType.POISON)
-			|| type.equals(PotionType.SLOWNESS)
-			|| type.equals(PotionType.WEAKNESS) 
-			|| type.equals(PotionType.TURTLE_MASTER)) {
+//			|| type.equals(PotionType.POISON)
+//			|| type.equals(PotionType.SLOWNESS)
+			|| type.equals(PotionType.WEAKNESS)) { 
+//			|| type.equals(PotionType.TURTLE_MASTER)) {
 				event.setCancelled(true);
 				event.getPlayer().sendMessage("" + ChatColor.RED + ChatColor.BOLD + "This potion is disabled.");
 			}
@@ -132,22 +128,23 @@ public class NtxNerfListener implements Listener {
 	@EventHandler
 	public void onPlayerProjectile(ProjectileLaunchEvent event) {
 		//Disable tipped arrows from being fired, except from strays.
-		if(event.getEntity() instanceof TippedArrow) {
-			if(event.getEntity().getShooter() instanceof Stray) return;
-			event.setCancelled(true);
-			event.getEntity().remove();
-			return;
-		} else if(event.getEntity() instanceof ThrownPotion) {
-			if(event.getEntity() instanceof LingeringPotion) {
-				event.setCancelled(true);
-				event.getEntity().remove();
-			}
+//		if(event.getEntity() instanceof TippedArrow) {
+//			if(event.getEntity().getShooter() instanceof Stray) return;
+//			event.setCancelled(true);
+//			event.getEntity().remove();
+//			return;
+		/*} else*/
+		if(event.getEntity() instanceof ThrownPotion) {
+//			if(event.getEntity() instanceof LingeringPotion) {
+//				event.setCancelled(true);
+//				event.getEntity().remove();
+//			}
 			ThrownPotion tp = (ThrownPotion) event.getEntity();
 			for(PotionEffect pe : tp.getEffects()) {
 				PotionEffectType type = pe.getType();
 				if(type.equals(PotionEffectType.HARM)
-				|| type.equals(PotionEffectType.POISON)
-				|| type.equals(PotionEffectType.SLOW)
+//				|| type.equals(PotionEffectType.POISON)
+//				|| type.equals(PotionEffectType.SLOW)
 				|| type.equals(PotionEffectType.WEAKNESS)) {
 					event.setCancelled(true);
 					event.getEntity().remove();
@@ -194,7 +191,7 @@ public class NtxNerfListener implements Listener {
 		}
 		
 		//Disable building on the nether roof, unless the player is /op or has the permission "ntx.build"
-		if(event.getPlayer().isOp() || event.getPlayer().hasPermission("ntx.build")) return;
+		if(event.getPlayer().hasPermission("ntx.build")) return;
 		
 		if(event.getBlock().getWorld().getEnvironment() == Environment.NETHER && event.getBlock().getLocation().getY() > 127.0d) {
 			event.getPlayer().sendMessage("" + ChatColor.RED + ChatColor.BOLD + "You are not allowed to build here.");
@@ -205,7 +202,7 @@ public class NtxNerfListener implements Listener {
 	@EventHandler
 	public void onPlayerMine(BlockBreakEvent event) {
 		//Disable building on the nether roof, unless the player is /op or has the permission "ntx.build"
-		if(event.getPlayer().isOp() || event.getPlayer().hasPermission("ntx.build")) return;
+		if(event.getPlayer().hasPermission("ntx.build")) return;
 		
 		if(event.getBlock().getWorld().getEnvironment() == Environment.NETHER && event.getBlock().getLocation().getY() > 127.0d) {
 			event.getPlayer().sendMessage("" + ChatColor.RED + ChatColor.BOLD + "You are not allowed to build here.");

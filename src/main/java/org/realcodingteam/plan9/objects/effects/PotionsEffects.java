@@ -39,8 +39,8 @@ public final class PotionsEffects extends Effects {
 	
 	private static final PotionsEffects GRACE = new PotionsEffects(50, PotionEffectType.DOLPHINS_GRACE, 120 * 20, 0);
 	private static final PotionsEffects FIRE  = new PotionsEffects(30, PotionEffectType.FIRE_RESISTANCE, 240 * 20, 0);
-	private static final PotionsEffects CONDUIT = new PotionsEffects(100, PotionEffectType.CONDUIT_POWER, 240 * 20, 2);
-	private static final PotionsEffects LEVITATE = new PotionsEffects(1000, PotionEffectType.LEVITATION, 20, 0);
+	private static final PotionsEffects CONDUIT = new PotionsEffects(100, PotionEffectType.CONDUIT_POWER, 240 * 20, 0);
+	private static final PotionsEffects SLOW_FALL = new PotionsEffects(30, PotionEffectType.SLOW_FALLING, 180 * 20, 0);
 
 	protected PotionsEffects(int cost, PotionEffectType type, int duration, int amp) {
 		super(cost);
@@ -62,7 +62,7 @@ public final class PotionsEffects extends Effects {
 			case HEART_OF_THE_SEA:  return GRACE;
 			case MAGMA_CREAM:		return FIRE;
 			case CONDUIT:			return CONDUIT;
-			case FEATHER: 			return LEVITATE;
+			case FEATHER: 			return SLOW_FALL;
 			default: 				return SPEED[0];
 		}
 	}

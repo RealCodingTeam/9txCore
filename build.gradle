@@ -1,0 +1,37 @@
+apply plugin: "java"
+
+buildscript {
+  ext.bukkit_version = "1.13.2-R0.1-SNAPSHOT"
+}
+
+repositories {
+  mavenCentral()
+  maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
+  maven { url "http://repo.dmulloy2.net/nexus/repository/public/" }
+  maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+version = "1.0"
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+configurations {
+  shade
+  compile.extendsFrom shade
+}
+
+// Use the shade configuration to include the dependency's class files in your final JAR
+
+dependencies {
+  compile "org.spigotmc:spigot-api:$bukkit_version";
+  compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.4.0";
+  // shade "org.somewebsite:some-dependency:version"
+}
+
+jar {
+  configurations.shade.each { dep ->
+    from(project.zipTree(dep)) {
+      exclude 'META-INF', 'META-INF/**'
+    }
+  }
+}

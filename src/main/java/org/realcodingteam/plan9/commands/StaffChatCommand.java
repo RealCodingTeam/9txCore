@@ -22,7 +22,7 @@ public class StaffChatCommand implements CommandExecutor, Listener {
 		Bukkit.getPluginManager().registerEvents(this, NtxPlugin.instance);
 	}
 	
-	private static final String FORMAT = "§3Staff §8>> §b%s§8: §f%s";
+	private static final String FORMAT = "§3Staff §8>> §9%s§8: §f%s";
 	private static final List<UUID> chatPlayers = new ArrayList<>();
 	
 	//Remove a player from staff chat
@@ -71,7 +71,7 @@ public class StaffChatCommand implements CommandExecutor, Listener {
 			}
 			
 			//Send the console's message in staff chat
-			name = ChatColor.RED + "[CONSOLE]";
+			name = ChatColor.RED + "" + "[CONSOLE]";
 			msg = String.join(" ", args);
 			
 			sendStaffMessage(name, msg);
@@ -105,7 +105,7 @@ public class StaffChatCommand implements CommandExecutor, Listener {
 		}
 		
 		//They sent a message after the command, send it in staff chat.
-		name = p.getName();
+		name = p.getDisplayName().replace("[CONSOLE]", "[noob]");
 		msg = String.join(" ", args);
 		
 		sendStaffMessage(name, msg);
@@ -128,7 +128,6 @@ public class StaffChatCommand implements CommandExecutor, Listener {
 	}
 	
 	//Inform players which chat they are in.
-	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		if(!event.getPlayer().hasPermission("ntx.staff")) return;
 		if(isInStaffChat(event.getPlayer())) {
