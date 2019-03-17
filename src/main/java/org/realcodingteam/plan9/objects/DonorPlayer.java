@@ -139,9 +139,14 @@ public class DonorPlayer {
                     
                     if (p.hasPermission("ntx.donor.time")) {
                         if (System.currentTimeMillis() - dp.lastLogin > 900000) {
+                            int amount = 1;
+                            if(p.hasPermission("ntx.end")) amount = 5;
+                            else if(p.hasPermission("ntx.emperor") || p.hasPermission("ntx.king")) amount = 3;
+                            else if(p.hasPermission("ntx.general") || p.hasPermission("ntx.knight") || p.hasPermission("ntx.soldier")) amount = 2;
+                            
                             dp.setLastLogin(dp.getLastLogin() + 900000);
-                            dp.setDp(dp.getDp() + 1);
-                            p.sendMessage(ChatColor.GREEN + "You just recieved 1 donor point for being online 15 minutes!");
+                            dp.setDp(dp.getDp() + amount);
+                            p.sendMessage(ChatColor.GREEN + "You just recieved " + amount + " donor point(s) for being online 15 minutes!");
                         }
                     }
                 }
