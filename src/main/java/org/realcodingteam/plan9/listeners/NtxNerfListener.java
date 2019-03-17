@@ -11,14 +11,17 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EnderPearl;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
@@ -244,6 +247,26 @@ public class NtxNerfListener implements Listener {
         
         if (player.getInventory().getItemInMainHand().getType().name().contains("_AXE")) {
             event.setDamage(event.getDamage() - 5.5);
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerItemPickup(EntityPickupItemEvent event) {
+        boolean hasPerm = event.getEntityType() == EntityType.PLAYER && ((Player)event.getEntity()).isOp();
+        
+        Material type = event.getItem().getItemStack().getType();
+        switch(type) {
+            case BEDROCK:
+            case BARRIER:
+            case END_PORTAL_FRAME:
+            case COMMAND_BLOCK:
+            case REPEATING_COMMAND_BLOCK:
+            case CHAIN_COMMAND_BLOCK:
+            case COMMAND_BLOCK_MINECART:
+            case STRUCTURE_BLOCK:
+            case DEBUG_STICK:
+                if(!hasPerm) event.setCancelled(true);
+            default: return;
         }
     }
 }
