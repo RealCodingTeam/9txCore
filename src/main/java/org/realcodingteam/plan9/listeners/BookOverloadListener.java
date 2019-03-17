@@ -77,6 +77,7 @@ public class BookOverloadListener implements Listener {
         }
         
         validateBook(event.getCurrentItem(), (Player)event.getWhoClicked());
+        if(event.getCursor() != null) validateBook(event.getCursor(), (Player)event.getWhoClicked());
     }
     
     private void validateBook(ItemStack is, Player player) {

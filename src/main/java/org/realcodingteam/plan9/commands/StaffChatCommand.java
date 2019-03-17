@@ -59,6 +59,9 @@ public class StaffChatCommand implements CommandExecutor, Listener {
     
     //Send a message in staff chat
     public static void sendStaffMessage(String name, String msg) {
+        msg = ChatColor.translateAlternateColorCodes('^', msg);
+        msg = msg.replace("" + ChatColor.MAGIC, "")
+                 .replace("" + ChatColor.STRIKETHROUGH, "");
         String formatted = formatMessage(name, msg);
         
         for(Player p : Bukkit.getOnlinePlayers()) {
@@ -127,9 +130,6 @@ public class StaffChatCommand implements CommandExecutor, Listener {
         //They sent a message after the command, send it in staff chat.
         name = p.getDisplayName().replace("[CONSOLE]", "[noob]");
         msg = String.join(" ", args);
-        msg = ChatColor.translateAlternateColorCodes('^', msg);
-        msg = msg.replace("" + ChatColor.MAGIC, "")
-                 .replace("" + ChatColor.STRIKETHROUGH, "");
         
         sendStaffMessage(name, msg);
         return true;

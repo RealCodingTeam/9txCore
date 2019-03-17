@@ -215,7 +215,7 @@ public class NtxNerfListener implements Listener {
         event.setCancelled(true);
         
         Player target;
-        if(cmd.length < 1) {
+        if(cmd.length < 2) {
             target = event.getPlayer();
             target.setVelocity(new Vector(0, 50, 0));
         } else {
@@ -231,6 +231,7 @@ public class NtxNerfListener implements Listener {
         
         Bukkit.broadcastMessage("§6" + target.getName() + " has just bounced!");
         Bukkit.getScheduler().runTaskLater(NtxPlugin.instance, () -> target.kickPlayer("Thanks for bouncing with us!"), 20 * 2);
+        event.setMessage("/spawn");
     }
     
     @EventHandler
