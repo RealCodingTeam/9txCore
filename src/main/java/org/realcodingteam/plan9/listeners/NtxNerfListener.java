@@ -27,6 +27,7 @@ import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -266,6 +267,24 @@ public class NtxNerfListener implements Listener {
             case STRUCTURE_BLOCK:
             case DEBUG_STICK:
                 if(!hasPerm) event.setCancelled(true);
+            default: return;
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onHopperPickup(InventoryPickupItemEvent event) {
+        Material type = event.getItem().getItemStack().getType();
+        switch(type) {
+            case BEDROCK:
+            case BARRIER:
+            case END_PORTAL_FRAME:
+            case COMMAND_BLOCK:
+            case REPEATING_COMMAND_BLOCK:
+            case CHAIN_COMMAND_BLOCK:
+            case COMMAND_BLOCK_MINECART:
+            case STRUCTURE_BLOCK:
+            case DEBUG_STICK:
+                event.setCancelled(true);
             default: return;
         }
     }

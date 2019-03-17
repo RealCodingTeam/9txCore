@@ -6,12 +6,14 @@ buildscript {
 
 repositories {
   mavenCentral()
-  maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
   maven { url "http://repo.dmulloy2.net/nexus/repository/public/" }
-  maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
+  maven { url "https://ci.ender.zone/plugin/repository/everything/" }
+  maven { url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" }
+  maven { url "https://papermc.io/repo/repository/maven-public/" }
+//  maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
-version = "1.1.4"
+version = "1.1.5"
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
@@ -23,7 +25,9 @@ configurations {
 // Use the shade configuration to include the dependency's class files in your final JAR
 
 dependencies {
-  compile "org.spigotmc:spigot-api:$bukkit_version";
+  //compile "org.spigotmc:spigot-api:$bukkit_version";
+  compile files("C:/Lol/server.jar")
+  compile "net.ess3:EssentialsX:2.16.1";
   compileOnly group: "com.comphenix.protocol", name: "ProtocolLib", version: "4.4.0";
   // shade "org.somewebsite:some-dependency:version"
 }
