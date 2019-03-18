@@ -60,12 +60,12 @@ public class DonorCommand implements CommandExecutor, TabCompleter {
         if(SubDonorCommand.stopConsole(sender)) return;
         type.apply((Player)sender);
     }
-    //False means sender is a player.
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(args.length < 1) {
             menu(sender, RootMenu::new);
+            return true;
         }
         
         BiConsumer<CommandSender, String[]> run;
