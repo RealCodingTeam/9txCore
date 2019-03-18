@@ -73,7 +73,7 @@ public class DonorCommand implements CommandExecutor, TabCompleter {
             run = subcommands.get(args[0].toLowerCase());
         } 
         else {
-            List<String> completions = onTabComplete(sender, cmd, label, args);
+            List<String> completions = getOptions(args[0]);
             if(completions == null || completions.size() < 1 || completions.size() > 1) run = new DonorHelp()::run;
             else run = subcommands.get(completions.get(0));
         }
@@ -87,11 +87,14 @@ public class DonorCommand implements CommandExecutor, TabCompleter {
         if(args.length < 1) return subcommands.keySet().stream().collect(Collectors.toList());
         if(args.length > 1) return null;
         
-        List<String> options = subcommands.keySet()
-                                    .stream()
-                                    .map(String::toLowerCase)
-                                    .filter(cmd -> cmd.startsWith(args[0].toLowerCase()) || args[0].trim().isEmpty())
-                                    .collect(Collectors.toList());
-        return options;
+        return getOptions(args[0]);
+    }
+    
+    private List<String> getOptions(String arg) {
+        return subcommands.keySet()
+                          .stream()
+                          .map(String::toLowerCase)
+                          .filter(cmd -> cmd.startsWith(arg.toLowerCase()) || arg.trim().isEmpty())
+                          .collect(Collectors.toList());
     }
 }

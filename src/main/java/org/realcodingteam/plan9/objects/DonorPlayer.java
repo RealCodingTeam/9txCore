@@ -15,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.realcodingteam.plan9.NtxPlugin;
 
+//Wrapper over UUID (basically OfflinePlayer) for use with /donor
+//Written by Luz
 public class DonorPlayer {
     
     public static Map<UUID, DonorPlayer> donors = new HashMap<>();

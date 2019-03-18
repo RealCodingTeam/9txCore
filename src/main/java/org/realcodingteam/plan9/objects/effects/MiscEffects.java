@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+//See Effects
 public class MiscEffects extends Effects {
 
     public static final MiscEffects FEED = new MiscEffects(5, Material.COOKIE);

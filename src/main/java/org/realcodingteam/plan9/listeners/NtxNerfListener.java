@@ -41,6 +41,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.realcodingteam.plan9.NtxPlugin;
 
+/*
+ * Disables or nerfs vanilla functions that are considered "over powered"
+ * on the server. 
+ */
 @SuppressWarnings("deprecation")
 public class NtxNerfListener implements Listener {
     
@@ -95,7 +99,7 @@ public class NtxNerfListener implements Listener {
     
     @EventHandler
     public void onPotionDrink(PlayerInteractEvent event) {
-        //Disable turtle master potions completely, along with debuff splashes and all lingering
+        //Disable tridents with the riptide enchantment
         if(event.getItem() == null) return;
         
         if(event.getItem().getType() == Material.TRIDENT) {
@@ -105,6 +109,7 @@ public class NtxNerfListener implements Listener {
             }
         }
         
+        //Disable certain splash potions
         if(event.getItem().getType() == Material.POTION || event.getItem().getType() == Material.SPLASH_POTION) {
             PotionMeta pm = (PotionMeta) event.getItem().getItemMeta();
             PotionType type = pm.getBasePotionData().getType();
@@ -118,6 +123,7 @@ public class NtxNerfListener implements Listener {
     
     @EventHandler
     public void onPlayerProjectile(ProjectileLaunchEvent event) {
+        //Disable certain splash potions from being launched (dispensers)
         if(event.getEntity() instanceof ThrownPotion) {
             ThrownPotion tp = (ThrownPotion) event.getEntity();
             for(PotionEffect pe : tp.getEffects()) {
@@ -131,7 +137,7 @@ public class NtxNerfListener implements Listener {
             }
         }
         
-        //Enderpearl specifc code
+        //Enderpearl specific code
         if(!(event.getEntity().getShooter() instanceof Player) || !(event.getEntity() instanceof EnderPearl)) return;
         
         //Add a cooldown to enderpearls to prevent spamming
@@ -161,6 +167,7 @@ public class NtxNerfListener implements Listener {
     public void onPlayerBuild(BlockPlaceEvent event) {
         World world = event.getBlock().getWorld();
         
+        //Disable placing beds in the nether and end
         if(event.getBlock().getType().name().endsWith("_BED")) {
             if(world.getEnvironment() == Environment.NETHER || world.getEnvironment() == Environment.THE_END) {
                 event.setCancelled(true);
@@ -168,7 +175,7 @@ public class NtxNerfListener implements Listener {
             }
         }
         
-        //Disable building on the nether roof, unless the player is /op or has the permission "ntx.build"
+        //Disable building on the nether roof unless the player is /op or has the permission "ntx.build"
         if(event.getPlayer().hasPermission("ntx.build")) return;
         
         if(event.getBlock().getWorld().getEnvironment() == Environment.NETHER && event.getBlock().getLocation().getY() > 127.0d) {
@@ -179,7 +186,7 @@ public class NtxNerfListener implements Listener {
     
     @EventHandler
     public void onPlayerMine(BlockBreakEvent event) {
-        //Disable building on the nether roof, unless the player is /op or has the permission "ntx.build"
+        //Disable building on the nether roof unless the player is /op or has the permission "ntx.build"
         if(event.getPlayer().hasPermission("ntx.build")) return;
         
         if(event.getBlock().getWorld().getEnvironment() == Environment.NETHER && event.getBlock().getLocation().getY() > 127.0d) {
@@ -190,7 +197,7 @@ public class NtxNerfListener implements Listener {
     
     @EventHandler
     public void onPlayerEnchantEvent(EnchantItemEvent event) {
-        //Disable getting riptide in enchantments.
+        //Prevent getting riptide in enchantments.
          
         for(Enchantment e : event.getEnchantsToAdd().keySet()) {
             if(e.getName().equals(Enchantment.RIPTIDE.getName())) {
@@ -235,11 +242,11 @@ public class NtxNerfListener implements Listener {
         
         Bukkit.broadcastMessage("§6" + target.getName() + " has just bounced!");
         Bukkit.getScheduler().runTaskLater(NtxPlugin.instance, () -> target.kickPlayer("Thanks for bouncing with us!"), 20 * 2);
-        event.setMessage("/spawn");
     }
     
     @EventHandler
     public void onDMG(EntityDamageByEntityEvent event) {
+        //Nerf axes
         if (!(event.getDamager() instanceof Player)) {
             return;
         }
@@ -253,6 +260,7 @@ public class NtxNerfListener implements Listener {
     
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerItemPickup(EntityPickupItemEvent event) {
+        //Don't let non-ops pick up "admin" blocks and items
         boolean hasPerm = event.getEntityType() == EntityType.PLAYER && ((Player)event.getEntity()).isOp();
         
         Material type = event.getItem().getItemStack().getType();
@@ -273,6 +281,7 @@ public class NtxNerfListener implements Listener {
     
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onHopperPickup(InventoryPickupItemEvent event) {
+        //Don't let hoppers pick up "admin" blocks and items
         Material type = event.getItem().getItemStack().getType();
         switch(type) {
             case BEDROCK:

@@ -2,6 +2,7 @@ package org.realcodingteam.plan9.objects.effects;
 
 import org.bukkit.Bukkit;
 
+//See Effects
 public final class ExpEffects extends Effects {
 
     public static final ExpEffects TIER_1 = new ExpEffects(15, 160);

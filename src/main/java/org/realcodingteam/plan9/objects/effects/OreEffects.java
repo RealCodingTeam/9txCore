@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.realcodingteam.plan9.NtxPlugin;
 
+//See Effects
 public class OreEffects extends Effects {
     
     private static int taskId = -1;
@@ -72,7 +73,7 @@ public class OreEffects extends Effects {
         }
         
         int amount = in.getAmount() * 3;
-        if(fortune) amount = (int) Math.floor((double)amount * 1.8d);
+        if(fortune) amount = (int) Math.floor(amount * 1.8d);
         in.setAmount(amount);
         
         return in;

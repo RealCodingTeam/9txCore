@@ -16,6 +16,13 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.injector.GamePhase;
 
+/**
+ * Prevents illegal client modifications from signing books
+ * without right clicking the book itself.
+ * 
+ * The mod this class attempts to prevent:
+ * https://github.com/fr1kin/ForgeHax/blob/master/src/main/java/com/matt/forgehax/mods/BookBot.java#L413
+ **/
 public class BookProtocolBlocker {
     
     public static void start() {
@@ -33,11 +40,16 @@ public class BookProtocolBlocker {
                 PacketContainer packet = event.getPacket();
                 try {
                     if(packet.getStrings().read(0).equals("MC|BSign")) {
+                        //shouldBlock keeps track of what action the player is currently doing.
+                        //It will return true if the player is not currently editing a book from
+                        //the server's perspective.
                         if(BookOverloadListener.shouldBlock(event.getPlayer())) {
                             event.setCancelled(true);
                             event.getPlayer().sendMessage("§cCould not write book because you never right clicked it?!?");
                         }
                     }
+                //not all PacketPlayCustomPayload packets have strings.
+                //I'm lazy.
                 } catch(Exception ignored) {}
             }
         });

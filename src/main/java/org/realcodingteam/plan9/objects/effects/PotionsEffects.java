@@ -5,6 +5,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+//See Effects
 public final class PotionsEffects extends Effects {
     
     private static final PotionsEffects[] SPEED = { 

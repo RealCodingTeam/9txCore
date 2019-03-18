@@ -20,13 +20,16 @@ import org.realcodingteam.plan9.objects.DonorPlayer;
 import org.realcodingteam.plan9.objects.effects.OreEffects;
 
 public class DonorListener implements Listener {
-
+    
+    //Handles when a player clicks in an AbstractMenu inventory
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         InventoryHolder holder = event.getInventory().getHolder();
         if(holder instanceof AbstractMenu) {
             event.setCancelled(true);
             AbstractMenu menu = (AbstractMenu) holder;
+            
+            //Filter out what kinds of click the AbstractMenu will see
             if(event.getClick().isKeyboardClick() 
             || event.getCurrentItem() == null 
             || event.getCurrentItem().getType() == Material.AIR
@@ -35,6 +38,7 @@ public class DonorListener implements Listener {
                 return;
             }
             
+            //Hardcoded back button
             if(event.getCurrentItem().getType() == Material.GOLD_INGOT) {
                 menu.openParent();
                 return;
@@ -44,6 +48,7 @@ public class DonorListener implements Listener {
         }
     }
 
+    //Triple ore drops (See OreEffects)
     @EventHandler
     public void onMineOre(BlockBreakEvent event) {
         if(!OreEffects.isTripleSmelt()) return;
@@ -64,10 +69,12 @@ public class DonorListener implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-
+        
+        //Make all players have no attack cooldown
         player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).addModifier(
                 new AttributeModifier("generic.attackSpeed", 99999999.0D, AttributeModifier.Operation.ADD_NUMBER));
 
+        //Grant one off donor bonus for donating for a rank
         if (player.hasPermission("ntx.donor")) {
             DonorPlayer dp = DonorPlayer.loadDonor(player.getUniqueId());
 
@@ -89,12 +96,13 @@ public class DonorListener implements Listener {
                 player.sendMessage(ChatColor.GREEN + "You have recieved your donor points of " + ChatColor.GOLD + recieved);
             }
 
-            player.setDisplayName(org.bukkit.ChatColor.getByChar(dp.getNick()) + player.getName() + ChatColor.RESET);
-            player.setPlayerListName(org.bukkit.ChatColor.getByChar(dp.getNick()) + player.getName() + ChatColor.RESET);
+            player.setDisplayName(ChatColor.getByChar(dp.getNick()) + player.getName() + ChatColor.RESET);
+            player.setPlayerListName(ChatColor.getByChar(dp.getNick()) + player.getName() + ChatColor.RESET);
             dp.setLastLogin(System.currentTimeMillis());
         }
     }
     
+    //Save donor players when they quit
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         DonorPlayer.saveDonor(DonorPlayer.getDonorPlayer(event.getPlayer().getUniqueId()));
