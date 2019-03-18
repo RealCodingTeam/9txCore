@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -38,6 +39,10 @@ public class DonorPlayer {
         this.hasReceivedDP = hasReceivedDP;
         this.nick = nick;
         this.setLastLogin(System.currentTimeMillis());
+    }
+    
+    public OfflinePlayer getPlayer() {
+        return Bukkit.getOfflinePlayer(id);
     }
 
     public UUID getId() {
@@ -108,19 +113,21 @@ public class DonorPlayer {
         return donor;
     }
     
-    public static void saveDonor(DonorPlayer dp) {
-        File playerFile = new File(NtxPlugin.instance.getDataFolder(), "Players/" + dp.getId() + ".txt");
-        FileConfiguration yaml = YamlConfiguration.loadConfiguration(playerFile);
-        
-        yaml.set("points", dp.getDp());
-        yaml.set("hasReceived", dp.hasReceivedDP()); 
-        yaml.set("nick", dp.getNick());
-        donors.remove(dp.getId());
-        
-        try {
-            yaml.save(playerFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static void saveDonor(DonorPlayer... players) {
+        for(DonorPlayer dp : players) {
+            File playerFile = new File(NtxPlugin.instance.getDataFolder(), "Players/" + dp.getId() + ".txt");
+            FileConfiguration yaml = YamlConfiguration.loadConfiguration(playerFile);
+            
+            yaml.set("points", dp.getDp());
+            yaml.set("hasReceived", dp.hasReceivedDP()); 
+            yaml.set("nick", dp.getNick());
+            donors.remove(dp.getId());
+            
+            try {
+                yaml.save(playerFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
     

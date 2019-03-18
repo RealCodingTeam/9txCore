@@ -29,6 +29,8 @@ public class NtxPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new BookOverloadListener(), this);
         //register commands
         getCommand("donor").setExecutor(new DonorCommand());
+        getCommand("donor").setTabCompleter(new DonorCommand());
+        
         getCommand("staff").setExecutor(new StaffChatCommand());
         
         enableBookChecker();

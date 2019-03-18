@@ -1,13 +1,14 @@
 name: 9txCore
 main: org.realcodingteam.plan9.NtxPlugin
-version: 1.1.5
+version: 1.1.6
 authors: [Danny, ProfLuz]
 softdepend: [ProtocolLib, Essentials]
 api-version: 1.13
 commands:
    donor:
       description: Opens the donor menu
-      usage: /<command> [help|xp|ores|potion|misc|nick]
+      usage: /<command>
+      aliases: [d]
    staff:
       description: Staff chat
       usage: /<command> [msg]

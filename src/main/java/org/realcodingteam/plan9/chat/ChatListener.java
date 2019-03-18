@@ -49,7 +49,7 @@ public class ChatListener implements Listener {
                 continue;
             }
             
-            int slot = msg[i + 2] - 48; //Ascii '0'-'9' minus 48 = number 0-9
+            int slot = msg[i + 2] - 48; //Ascii '0'-'9' minus 48 = number 1-9
             ItemStack item = event.getPlayer().getInventory().getItem(slot - 1);
             if(item == null || item.getType() == Material.AIR || items[slot - 1]) {
                 base.addExtra(c + "");
