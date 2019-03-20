@@ -49,6 +49,9 @@ public final class ItemTag {
     }
     
     private static String proper(Material material) {
+        //converts any item type into uppercase words
+        //DIAMOND_SWORD = Diamond Sword
+        //ACACIA_FENCE_GATE = Acacia Fence Gate
         String[] name = material.name().split("_");
         for(int i = 0; i < name.length; i++) {
             name[i] = name[i].charAt(0) + name[i].substring(1).toLowerCase();
