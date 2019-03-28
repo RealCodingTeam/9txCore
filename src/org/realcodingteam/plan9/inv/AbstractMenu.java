@@ -42,7 +42,7 @@ public abstract class AbstractMenu implements InventoryHolder {
         return ChatColor.RED + "###ERROR###: " + im.getDisplayName();
     }
     
-    protected final Inventory inv;
+    protected Inventory inv;
     protected final Player viewer;
     protected final boolean has_parent;
     

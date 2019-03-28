@@ -2,6 +2,8 @@ package org.realcodingteam.plan9.objects;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.realcodingteam.plan9.NtxPlugin;
@@ -37,10 +39,15 @@ public final class RainbowWool {
     
     private RainbowWool() {
         index = 0;
+        
         WOOL = new ItemStack(WOOL_COLORS[index], 1);
+        WOOL.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+        
         ItemMeta im = WOOL.getItemMeta();
         im.setDisplayName("" + CHAT_COLORS[index] + ChatColor.ITALIC + "Multi-colored name");
+        im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         WOOL.setItemMeta(im);
+        
         Bukkit.getScheduler().scheduleSyncRepeatingTask(NtxPlugin.instance, this::next, 10L, 10L);
     }
     
