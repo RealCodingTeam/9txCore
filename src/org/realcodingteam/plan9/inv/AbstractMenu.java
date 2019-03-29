@@ -65,7 +65,7 @@ public abstract class AbstractMenu implements InventoryHolder {
         open_invs.removeIf(p2 -> p2.getUniqueId().equals(p.getUniqueId()));
     }
     
-    private void setDonorSlot(Player player, int slot) {
+    protected void setDonorSlot(Player player, int slot) {
         DonorPlayer dp = DonorPlayer.getDonorPlayer(player.getUniqueId());
         
         List<String> lore = new ArrayList<>();
