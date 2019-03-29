@@ -56,37 +56,44 @@ public final class MultiColorNickMenu extends AbstractMenu {
 
     @Override
     public void onInventoryClick(ItemStack item) {
-        switch(item.getType()) {
-            case PAPER: return;
-            case LIME_STAINED_GLASS_PANE:
-                letters.add("§r");
-                
-                String name = asString(letters);
-                
-                DonorPlayer.getDonorPlayer(viewer.getUniqueId()).setNick(name);
-                viewer.setDisplayName(name);
-                viewer.setPlayerListName(name);
-                viewer.sendMessage(ChatColor.YELLOW + "You set your name to: " + viewer.getDisplayName());
-                viewer.closeInventory();
-                close(viewer);
-                return;
-            case RED_STAINED_GLASS_PANE:
-                if(letters.isEmpty() || index < 1) break;
-                letters.removeLast();
-                letters.removeLast();
-                index--;
-                inv = Bukkit.createInventory(this, 27, "§5Pick your name colors");
-                build();
-                return;
-            default:
-                ChatColor color = NickMenu.colorFromItem(item.getType());
-                char at = viewer.getName().charAt(index);
-                letters.add("" + color);
-                letters.add("" + at);
-                index++;
-                build();
-                return;
+        //I changed back to if statements because
+        //the switch statement bloated the compiled size.
+        //This code compiles to about 5KB as is, but with the
+        //switch statement, blew up to about 70KB. The entire
+        //Material enum was copied into the class file.
+        
+        if(item.getType() == Material.PAPER) return;
+        
+        if(item.getType() == Material.LIME_STAINED_GLASS_PANE) {
+            letters.add("§r");
+            
+            String name = asString(letters);
+            
+            DonorPlayer.getDonorPlayer(viewer.getUniqueId()).setNick(name);
+            viewer.setDisplayName(name);
+            viewer.setPlayerListName(name);
+            viewer.sendMessage(ChatColor.YELLOW + "You set your name to: " + viewer.getDisplayName());
+            viewer.closeInventory();
+            close(viewer);
+            return;
         }
+        
+        if(item.getType() == Material.RED_STAINED_GLASS_PANE) {
+            if(letters.isEmpty() || index < 1) return;
+            letters.removeLast();
+            letters.removeLast();
+            index--;
+            inv = Bukkit.createInventory(this, 27, "§5Pick your name colors");
+            build();
+            return;
+        }
+        
+        ChatColor color = NickMenu.colorFromItem(item.getType());
+        char at = viewer.getName().charAt(index);
+        letters.add("" + color);
+        letters.add("" + at);
+        index++;
+        build();
     }
     
     private String asString(Deque<String> list) {

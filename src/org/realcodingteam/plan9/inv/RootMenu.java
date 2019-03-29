@@ -15,6 +15,7 @@ public final class RootMenu extends AbstractMenu {
         open(viewer);
     }
     
+    @Override
     protected void build() {
         inv.setItem(9,  makeItem(Material.WHITE_WOOL,            "§5Nick",             "§aChange your chat color!"));
         inv.setItem(11, makeItem(Material.EXPERIENCE_BOTTLE,     "§5XP",               "§aGive everyone online XP!"));
@@ -25,23 +26,11 @@ public final class RootMenu extends AbstractMenu {
 
     @Override
     public void onInventoryClick(ItemStack item) {
-        switch(item.getType()) {
-            case WHITE_WOOL:
-                new NickMenu(viewer);
-                break;
-            case EXPERIENCE_BOTTLE:
-                new ExpMenu(viewer);
-                break;
-            case GOLD_ORE:
-                new OresMenu(viewer);
-                break;
-            case BREWING_STAND:
-                new PotionsMenu(viewer);
-                break;
-            case COOKIE:
-                new MiscMenu(viewer);
-                break;
-            default: return;
-        }
+        
+        if(item.getType() == Material.WHITE_WOOL) new NickMenu(viewer);
+        else if(item.getType() == Material.EXPERIENCE_BOTTLE) new ExpMenu(viewer);
+        else if(item.getType() == Material.GOLD_ORE) new OresMenu(viewer);
+        else if(item.getType() == Material.BREWING_STAND) new PotionsMenu(viewer);
+        else if(item.getType() == Material.COOKIE) new MiscMenu(viewer);
     }
 }

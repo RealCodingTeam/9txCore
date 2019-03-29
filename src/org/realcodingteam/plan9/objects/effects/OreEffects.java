@@ -1,6 +1,8 @@
 package org.realcodingteam.plan9.objects.effects;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -9,6 +11,20 @@ import org.realcodingteam.plan9.NtxPlugin;
 
 //See Effects
 public class OreEffects extends Effects {
+    
+    private static final Map<Material, Material> ORE_TO_RESOURCE;
+    static {
+        ORE_TO_RESOURCE = new HashMap<>();
+        
+        ORE_TO_RESOURCE.put(Material.COAL_ORE, Material.COAL);
+        ORE_TO_RESOURCE.put(Material.IRON_ORE, Material.IRON_INGOT);
+        ORE_TO_RESOURCE.put(Material.GOLD_ORE, Material.GOLD_INGOT);
+        ORE_TO_RESOURCE.put(Material.LAPIS_ORE, Material.LAPIS_LAZULI);
+        ORE_TO_RESOURCE.put(Material.REDSTONE_ORE, Material.REDSTONE);
+        ORE_TO_RESOURCE.put(Material.DIAMOND_ORE, Material.DIAMOND);
+        ORE_TO_RESOURCE.put(Material.EMERALD_ORE, Material.EMERALD);
+        ORE_TO_RESOURCE.put(Material.NETHER_QUARTZ_ORE, Material.QUARTZ);
+    }
     
     private static int taskId = -1;
     private static long TRIPLE_ORE_TIME = Instant.now().toEpochMilli();
@@ -43,34 +59,7 @@ public class OreEffects extends Effects {
     }
     
     public static ItemStack smelt(ItemStack in, boolean fortune) {
-        switch (in.getType()) {
-            case DIAMOND_ORE:
-                in.setType(Material.DIAMOND);
-                break;
-            case EMERALD_ORE:
-                in.setType(Material.EMERALD);
-                break;
-            case GOLD_ORE:
-                in.setType(Material.GOLD_INGOT);
-                break;
-            case IRON_ORE:
-                in.setType(Material.IRON_INGOT);
-                break;
-            case LAPIS_ORE:
-                in.setType(Material.LAPIS_LAZULI);
-                break;
-            case REDSTONE_ORE:
-                in.setType(Material.REDSTONE);
-                break;
-            case COAL_ORE:
-                in.setType(Material.COAL);
-                break;
-            case NETHER_QUARTZ_ORE:
-                in.setType(Material.QUARTZ);
-                break;
-            default:
-                break;
-        }
+        in.setType(ORE_TO_RESOURCE.getOrDefault(in.getType(), in.getType()));
         
         int amount = in.getAmount() * 3;
         if(fortune) amount = (int) Math.floor(amount * 1.8d);

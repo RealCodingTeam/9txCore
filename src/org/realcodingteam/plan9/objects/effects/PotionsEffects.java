@@ -1,6 +1,10 @@
 package org.realcodingteam.plan9.objects.effects;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -49,22 +53,29 @@ public final class PotionsEffects extends Effects {
         effect = () -> Bukkit.getOnlinePlayers().forEach(p -> p.addPotionEffect(new PotionEffect(type, duration, amp), true));
     }
     
+    private static final Map<Material, PotionsEffects[]> effects;
+    static {
+        effects = new HashMap<>();
+        
+        effects.put(Material.SUGAR, SPEED);
+        effects.put(Material.GOLDEN_CARROT, INVIS);
+        effects.put(Material.GOLDEN_PICKAXE, HASTE);
+        effects.put(Material.GLOWSTONE, GLOWING);
+        effects.put(Material.GHAST_TEAR, REGEN);
+        effects.put(Material.HEART_OF_THE_SEA, new PotionsEffects[] { GRACE });
+        effects.put(Material.MAGMA_CREAM, new PotionsEffects[] { FIRE});
+        effects.put(Material.CONDUIT, new PotionsEffects[] { CONDUIT });
+        effects.put(Material.FEATHER, new PotionsEffects[] { SLOW_FALL });
+        
+    }
+    
     public static PotionsEffects fromItem(ItemStack item) {
         int index = item.getAmount() - 1;
         if(index < 0) index = 0;
         if(index > 2) index = 2;
         
-        switch(item.getType()) {
-            case SUGAR:             return SPEED[index];
-            case GOLDEN_CARROT:     return INVIS[index];
-            case GOLDEN_PICKAXE:     return HASTE[index];
-            case GLOWSTONE:         return GLOWING[index];
-            case GHAST_TEAR:         return REGEN[index];
-            case HEART_OF_THE_SEA:  return GRACE;
-            case MAGMA_CREAM:        return FIRE;
-            case CONDUIT:            return CONDUIT;
-            case FEATHER:             return SLOW_FALL;
-            default:                 return SPEED[0];
-        }
+        PotionsEffects[] arr = effects.getOrDefault(item.getType(), SPEED);
+        if(index >= arr.length) index = 0;
+        return arr[index];
     }
 }

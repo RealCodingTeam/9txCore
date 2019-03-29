@@ -1,12 +1,17 @@
 package org.realcodingteam.plan9.objects.effects;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 //See Effects
 public class MiscEffects extends Effects {
-
+    
+    private static final Map<Material, MiscEffects> effects = new HashMap<>();
+    
     public static final MiscEffects FEED = new MiscEffects(5, Material.COOKIE);
     public static final MiscEffects HEAL = new MiscEffects(15, Material.GOLDEN_APPLE);
     public static final MiscEffects SUNNY = new MiscEffects(10, Material.BUCKET);
@@ -17,42 +22,40 @@ public class MiscEffects extends Effects {
     protected MiscEffects(int cost, Material mat) {
         super(cost);
         
-        switch(mat) {
-            case COOKIE:
-                effect = () -> {
-                    Bukkit.getOnlinePlayers().forEach(p -> {
-                        p.setSaturation(20.0f);
-                        p.setFoodLevel(20);
-                    });
-                };
-                break;
-            case GOLDEN_APPLE:
-                effect = () -> Bukkit.getOnlinePlayers().forEach(p -> p.setHealth(p.getMaxHealth()));
-                break;
-            case BUCKET:
-                effect = () -> Bukkit.getWorld("world").setStorm(false);
-                break;
-            case WATER_BUCKET:
-                effect = () -> {
-                    Bukkit.getWorld("world").setStorm(true);
-                    Bukkit.getWorld("world").setThundering(true);
-                };
-                break;
-            case SUNFLOWER:
-            default:
-                effect = () -> Bukkit.getWorld("world").setTime(1000);
+        //I changed back to if statements because
+        //the switch statement bloated the compiled size.
+        //This code compiles to about 5KB as is, but with the
+        //switch statement, blew up to about 77KB. The entire
+        //Material enum was copied into the class file.
+        
+        if(mat == Material.COOKIE) {
+            effect = () -> {
+                Bukkit.getOnlinePlayers().forEach(p -> {
+                    p.setSaturation(20.0f);
+                    p.setFoodLevel(20);
+                });
+            };
         }
+        else if(mat == Material.GOLDEN_APPLE) {
+            effect = () -> Bukkit.getOnlinePlayers().forEach(p -> p.setHealth(p.getMaxHealth()));
+        }
+        else if(mat == Material.BUCKET) {
+            effect = () -> Bukkit.getWorld("world").setStorm(false);
+        } 
+        else if(mat == Material.WATER_BUCKET) {
+            effect = () -> {
+                Bukkit.getWorld("world").setStorm(true);
+                Bukkit.getWorld("world").setThundering(true);
+            };
+        } else {
+            effect = () -> Bukkit.getWorld("world").setTime(1000);
+        }
+        
+        effects.put(mat, this);
     }
     
     public static MiscEffects fromItem(ItemStack item) {
-        switch(item.getType()) {
-            case COOKIE: return FEED;
-            case GOLDEN_APPLE: return HEAL;
-            case BUCKET: return SUNNY;
-            case WATER_BUCKET: return STORMY;
-            case SUNFLOWER: 
-            default: return DAY;
-        }
+        return effects.getOrDefault(item.getType(), DAY);
     }
 
 }

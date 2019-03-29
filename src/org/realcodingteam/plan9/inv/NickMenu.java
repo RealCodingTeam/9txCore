@@ -1,5 +1,8 @@
 package org.realcodingteam.plan9.inv;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -48,28 +51,30 @@ public class NickMenu extends AbstractMenu {
         }
     }
     
+    private static final Map<Material, ChatColor> COLOR_MAP;
+    static {
+        COLOR_MAP = new HashMap<>();
+        
+        COLOR_MAP.put(Material.BLACK_WOOL, ChatColor.BLACK);
+        COLOR_MAP.put(Material.LAPIS_BLOCK, ChatColor.DARK_BLUE);
+        COLOR_MAP.put(Material.GREEN_WOOL, ChatColor.DARK_GREEN);
+        COLOR_MAP.put(Material.CYAN_WOOL, ChatColor.DARK_AQUA);
+        COLOR_MAP.put(Material.RED_WOOL, ChatColor.DARK_RED);
+        COLOR_MAP.put(Material.PURPLE_WOOL, ChatColor.DARK_PURPLE);
+        COLOR_MAP.put(Material.GOLD_BLOCK, ChatColor.GOLD);
+        COLOR_MAP.put(Material.STONE, ChatColor.GRAY);
+        COLOR_MAP.put(Material.GRAY_WOOL, ChatColor.DARK_GRAY);
+        COLOR_MAP.put(Material.BLUE_WOOL, ChatColor.BLUE);
+        COLOR_MAP.put(Material.LIME_WOOL, ChatColor.GREEN);
+        COLOR_MAP.put(Material.LIGHT_BLUE_WOOL, ChatColor.AQUA);
+        COLOR_MAP.put(Material.RED_TERRACOTTA, ChatColor.RED);
+        COLOR_MAP.put(Material.PINK_CONCRETE, ChatColor.LIGHT_PURPLE);
+        COLOR_MAP.put(Material.YELLOW_WOOL, ChatColor.YELLOW);
+        COLOR_MAP.put(Material.WHITE_WOOL, ChatColor.WHITE);
+    }
+    
     protected static ChatColor colorFromItem(Material mat) {
-        ChatColor color = ChatColor.WHITE;
-        switch(mat) {
-            case BLACK_WOOL:      color = ChatColor.BLACK; break;
-            case LAPIS_BLOCK:     color = ChatColor.DARK_BLUE; break;
-            case GREEN_WOOL:      color = ChatColor.DARK_GREEN; break;
-            case CYAN_WOOL:       color = ChatColor.DARK_AQUA; break;
-            case RED_WOOL:        color = ChatColor.DARK_RED;    break;
-            case PURPLE_WOOL:     color = ChatColor.DARK_PURPLE; break;
-            case GOLD_BLOCK:      color = ChatColor.GOLD; break;
-            case STONE:           color = ChatColor.GRAY; break;
-            case GRAY_WOOL:       color = ChatColor.DARK_GRAY; break;
-            case BLUE_WOOL:       color = ChatColor.BLUE; break;
-            case LIME_WOOL:       color = ChatColor.GREEN; break;
-            case LIGHT_BLUE_WOOL: color = ChatColor.AQUA; break;
-            case RED_TERRACOTTA:  color = ChatColor.RED; break;
-            case PINK_CONCRETE:   color = ChatColor.LIGHT_PURPLE; break;
-            case YELLOW_WOOL:     color = ChatColor.YELLOW; break;
-            case WHITE_WOOL:      color = ChatColor.WHITE; break;
-            default: break;
-        }
-        return color;
+        return COLOR_MAP.getOrDefault(mat, ChatColor.WHITE);
     }
 
     @Override

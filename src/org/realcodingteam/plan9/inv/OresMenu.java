@@ -25,18 +25,11 @@ public class OresMenu extends AbstractMenu {
     @Override
     public void onInventoryClick(ItemStack item) {
         OreEffects tier;
-        switch(item.getType()) {
-            case IRON_ORE:
-                tier = OreEffects.TIER_1;
-                break;
-            case GOLD_ORE:
-                tier = OreEffects.TIER_2;
-                break;
-            case DIAMOND_ORE:
-                tier = OreEffects.TIER_3;
-                break;
-            default: return;
-        }
+        
+        if(item.getType() == Material.IRON_ORE) tier = OreEffects.TIER_1;
+        else if(item.getType() == Material.GOLD_ORE) tier = OreEffects.TIER_2;
+        else if(item.getType() == Material.DIAMOND_ORE) tier = OreEffects.TIER_3;
+        else return;
         
         tier.buyAndRun(viewer, getLore(item));
     }

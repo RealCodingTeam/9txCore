@@ -1,7 +1,9 @@
 package org.realcodingteam.plan9.listeners;
 
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
@@ -258,43 +260,26 @@ public class NtxNerfListener implements Listener {
         }
     }
     
+    private static final List<Material> DISABLED_MATERIALS = Arrays.asList(
+            Material.BEDROCK, Material.BARRIER, Material.END_PORTAL_FRAME,
+            Material.COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK,
+            Material.CHAIN_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
+            Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID, Material.DEBUG_STICK
+    );
+    
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerItemPickup(EntityPickupItemEvent event) {
         //Don't let non-ops pick up "admin" blocks and items
         boolean hasPerm = event.getEntityType() == EntityType.PLAYER && ((Player)event.getEntity()).isOp();
         
         Material type = event.getItem().getItemStack().getType();
-        switch(type) {
-            case BEDROCK:
-            case BARRIER:
-            case END_PORTAL_FRAME:
-            case COMMAND_BLOCK:
-            case REPEATING_COMMAND_BLOCK:
-            case CHAIN_COMMAND_BLOCK:
-            case COMMAND_BLOCK_MINECART:
-            case STRUCTURE_BLOCK:
-            case DEBUG_STICK:
-                if(!hasPerm) event.setCancelled(true);
-            default: return;
-        }
+        if(DISABLED_MATERIALS.contains(type) && !hasPerm) event.setCancelled(true);
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onHopperPickup(InventoryPickupItemEvent event) {
         //Don't let hoppers pick up "admin" blocks and items
         Material type = event.getItem().getItemStack().getType();
-        switch(type) {
-            case BEDROCK:
-            case BARRIER:
-            case END_PORTAL_FRAME:
-            case COMMAND_BLOCK:
-            case REPEATING_COMMAND_BLOCK:
-            case CHAIN_COMMAND_BLOCK:
-            case COMMAND_BLOCK_MINECART:
-            case STRUCTURE_BLOCK:
-            case DEBUG_STICK:
-                event.setCancelled(true);
-            default: return;
-        }
+        if(DISABLED_MATERIALS.contains(type)) event.setCancelled(true);
     }
 }
