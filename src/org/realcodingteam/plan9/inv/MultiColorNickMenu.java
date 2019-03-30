@@ -16,7 +16,7 @@ public final class MultiColorNickMenu extends AbstractMenu {
     private Deque<String> letters = new ArrayDeque<String>();
     
     public MultiColorNickMenu(Player viewer) {
-        super(27, "§5Pick your name colors", viewer, false);
+        super(27, "Â§5Pick your name colors", viewer, false);
         
         build();
     }
@@ -25,30 +25,30 @@ public final class MultiColorNickMenu extends AbstractMenu {
     protected void build() {
         if(!letters.isEmpty()) {
             inv = Bukkit.createInventory(this, 27, asString(letters));
-            inv.setItem(19, makeItem(Material.RED_STAINED_GLASS_PANE, "§cDelete last letter"));
+            inv.setItem(19, makeItem(Material.RED_STAINED_GLASS_PANE, "Â§cDelete last letter"));
         }
         
-        inv.setItem(inv.getSize() - 1, makeItem(Material.PAPER, "§eName: §r" + asString(letters)));
+        inv.setItem(inv.getSize() - 1, makeItem(Material.PAPER, "Â§eName: Â§r" + asString(letters)));
         
         if(index < viewer.getName().length()) {
-            inv.setItem(0,  makeItem(Material.BLACK_WOOL,        "Add §0Black"));
-            inv.setItem(1,  makeItem(Material.LAPIS_BLOCK,       "Add §1Dark blue"));
-            inv.setItem(2,  makeItem(Material.GREEN_WOOL,        "Add §2Dark green"));
-            inv.setItem(3,  makeItem(Material.CYAN_WOOL,         "Add §3Dark aqua"));
-            inv.setItem(4,  makeItem(Material.RED_WOOL,          "Add §4Dark red"));
-            inv.setItem(5,  makeItem(Material.PURPLE_WOOL,       "Add §5Purple"));
-            inv.setItem(6,  makeItem(Material.GOLD_BLOCK,        "Add §6Gold"));
-            inv.setItem(7,  makeItem(Material.STONE,             "Add §7Gray"));
-            inv.setItem(8,  makeItem(Material.GRAY_WOOL,         "Add §8Dark gray"));
-            inv.setItem(9,  makeItem(Material.BLUE_WOOL,         "Add §9Blue"));
-            inv.setItem(10, makeItem(Material.LIME_WOOL,         "Add §aGreen"));
-            inv.setItem(11, makeItem(Material.LIGHT_BLUE_WOOL,   "Add §bAqua"));
-            inv.setItem(12, makeItem(Material.RED_TERRACOTTA,    "Add §cRed"));
-            inv.setItem(13, makeItem(Material.PINK_CONCRETE,     "Add §dLight purple"));
-            inv.setItem(14, makeItem(Material.YELLOW_WOOL,       "Add §eYellow"));
-            inv.setItem(15, makeItem(Material.WHITE_WOOL,        "Add §fWhite"));
+            inv.setItem(0,  makeItem(Material.BLACK_WOOL,        "Add Â§0Black"));
+            inv.setItem(1,  makeItem(Material.LAPIS_BLOCK,       "Add Â§1Dark blue"));
+            inv.setItem(2,  makeItem(Material.GREEN_WOOL,        "Add Â§2Dark green"));
+            inv.setItem(3,  makeItem(Material.CYAN_WOOL,         "Add Â§3Dark aqua"));
+            inv.setItem(4,  makeItem(Material.RED_WOOL,          "Add Â§4Dark red"));
+            inv.setItem(5,  makeItem(Material.PURPLE_WOOL,       "Add Â§5Purple"));
+            inv.setItem(6,  makeItem(Material.GOLD_BLOCK,        "Add Â§6Gold"));
+            inv.setItem(7,  makeItem(Material.STONE,             "Add Â§7Gray"));
+            inv.setItem(8,  makeItem(Material.GRAY_WOOL,         "Add Â§8Dark gray"));
+            inv.setItem(9,  makeItem(Material.BLUE_WOOL,         "Add Â§9Blue"));
+            inv.setItem(10, makeItem(Material.LIME_WOOL,         "Add Â§aGreen"));
+            inv.setItem(11, makeItem(Material.LIGHT_BLUE_WOOL,   "Add Â§bAqua"));
+            inv.setItem(12, makeItem(Material.RED_TERRACOTTA,    "Add Â§cRed"));
+            inv.setItem(13, makeItem(Material.PINK_CONCRETE,     "Add Â§dLight purple"));
+            inv.setItem(14, makeItem(Material.YELLOW_WOOL,       "Add Â§eYellow"));
+            inv.setItem(15, makeItem(Material.WHITE_WOOL,        "Add Â§fWhite"));
         } else {
-            inv.setItem(18, makeItem(Material.LIME_STAINED_GLASS_PANE, "§aConfirm name: §r" + asString(letters)));
+            inv.setItem(18, makeItem(Material.LIME_STAINED_GLASS_PANE, "Â§aConfirm name: Â§r" + asString(letters)));
         }
         
         open(viewer);
@@ -65,7 +65,7 @@ public final class MultiColorNickMenu extends AbstractMenu {
         if(item.getType() == Material.PAPER) return;
         
         if(item.getType() == Material.LIME_STAINED_GLASS_PANE) {
-            letters.add("§r");
+            letters.add("Â§r");
             
             String name = asString(letters);
             
@@ -83,7 +83,7 @@ public final class MultiColorNickMenu extends AbstractMenu {
             letters.removeLast();
             letters.removeLast();
             index--;
-            inv = Bukkit.createInventory(this, 27, "§5Pick your name colors");
+            inv = Bukkit.createInventory(this, 27, "Â§5Pick your name colors");
             build();
             return;
         }

@@ -25,29 +25,29 @@ public class NickMenu extends AbstractMenu {
 
     @Override
     protected void build() {
-        inv.setItem(0,  makeItem(Material.BLACK_WOOL,        "§0Black §fname"));
-        inv.setItem(1,  makeItem(Material.LAPIS_BLOCK,       "§1Dark blue §fname"));
-        inv.setItem(2,  makeItem(Material.GREEN_WOOL,        "§2Dark green §fname"));
-        inv.setItem(3,  makeItem(Material.CYAN_WOOL,         "§3Dark aqua §fname"));
-        inv.setItem(4,  makeItem(Material.RED_WOOL,          "§4Dark red §fname"));
-        inv.setItem(5,  makeItem(Material.PURPLE_WOOL,       "§5Purple §fname"));
-        inv.setItem(6,  makeItem(Material.GOLD_BLOCK,        "§6Gold §fname"));
-        inv.setItem(7,  makeItem(Material.STONE,             "§7Gray §fname"));
-        inv.setItem(8,  makeItem(Material.GRAY_WOOL,         "§8Dark gray §fname"));
-        inv.setItem(9,  makeItem(Material.BLUE_WOOL,         "§9Blue §fname"));
-        inv.setItem(10, makeItem(Material.LIME_WOOL,         "§aGreen §fname"));
-        inv.setItem(11, makeItem(Material.LIGHT_BLUE_WOOL,   "§bAqua §fname"));
-        inv.setItem(12, makeItem(Material.RED_TERRACOTTA,    "§cRed §fname"));
-        inv.setItem(13, makeItem(Material.PINK_CONCRETE,     "§dLight purple §fname"));
-        inv.setItem(14, makeItem(Material.YELLOW_WOOL,       "§eYellow §fname"));
-        inv.setItem(15, makeItem(Material.WHITE_WOOL,        "§fWhite §fname"));
+        inv.setItem(0,  makeItem(Material.BLACK_WOOL,        "Â§0Black Â§fname"));
+        inv.setItem(1,  makeItem(Material.LAPIS_BLOCK,       "Â§1Dark blue Â§fname"));
+        inv.setItem(2,  makeItem(Material.GREEN_WOOL,        "Â§2Dark green Â§fname"));
+        inv.setItem(3,  makeItem(Material.CYAN_WOOL,         "Â§3Dark aqua Â§fname"));
+        inv.setItem(4,  makeItem(Material.RED_WOOL,          "Â§4Dark red Â§fname"));
+        inv.setItem(5,  makeItem(Material.PURPLE_WOOL,       "Â§5Purple Â§fname"));
+        inv.setItem(6,  makeItem(Material.GOLD_BLOCK,        "Â§6Gold Â§fname"));
+        inv.setItem(7,  makeItem(Material.STONE,             "Â§7Gray Â§fname"));
+        inv.setItem(8,  makeItem(Material.GRAY_WOOL,         "Â§8Dark gray Â§fname"));
+        inv.setItem(9,  makeItem(Material.BLUE_WOOL,         "Â§9Blue Â§fname"));
+        inv.setItem(10, makeItem(Material.LIME_WOOL,         "Â§aGreen Â§fname"));
+        inv.setItem(11, makeItem(Material.LIGHT_BLUE_WOOL,   "Â§bAqua Â§fname"));
+        inv.setItem(12, makeItem(Material.RED_TERRACOTTA,    "Â§cRed Â§fname"));
+        inv.setItem(13, makeItem(Material.PINK_CONCRETE,     "Â§dLight purple Â§fname"));
+        inv.setItem(14, makeItem(Material.YELLOW_WOOL,       "Â§eYellow Â§fname"));
+        inv.setItem(15, makeItem(Material.WHITE_WOOL,        "Â§fWhite Â§fname"));
         
         if(viewer.hasPermission("ntx.end")) {
             taskid = Bukkit.getScheduler().scheduleSyncRepeatingTask(NtxPlugin.instance, () -> {
                 inv.setItem(16, RainbowWool.instance.getWool());
             }, 0L, 10L);
         } else {
-            inv.setItem(16, makeItem(Material.BEDROCK, "§4§nDonate for§9§l End §4§nto access multi-colored names!"));
+            inv.setItem(16, makeItem(Material.BEDROCK, "Â§4Â§nDonate forÂ§9Â§l End Â§4Â§nto access multi-colored names!"));
         }
     }
     

@@ -30,7 +30,7 @@ public abstract class Effects {
     
     //Run the effect and broadcast to the server what was bought
     private final void run(Player buyer, String display) {
-        Bukkit.broadcastMessage("§e[DONOR] §r" + buyer.getDisplayName() + "§d purchased §e" + display + "§d for the server!");
+        Bukkit.broadcastMessage("Â§e[DONOR] Â§r" + buyer.getDisplayName() + "Â§d purchased Â§e" + display + "Â§d for the server!");
         if(effect != null) effect.run();
         buyer.closeInventory();
     }

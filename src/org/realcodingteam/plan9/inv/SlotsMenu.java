@@ -44,7 +44,7 @@ public final class SlotsMenu extends AbstractMenu {
     private final DonorPlayer dp; //The DonorPlayer wrapper for the viewer
     
     private SlotsMenu(Player viewer) {
-        super(36, "§5Donor - Slots", viewer, false);
+        super(36, "Â§5Donor - Slots", viewer, false);
         dp = DonorPlayer.getDonorPlayer(viewer.getUniqueId());
         
         build();
@@ -69,7 +69,7 @@ public final class SlotsMenu extends AbstractMenu {
             
         //ensure the player can play
         if(dp.getDp() < ROLL_COST && dp.getRolls() < 1) {
-            String msg = String.format("§cSorry, you do not have enough donor points to play slots. You need at least §d%d§c DP.", ROLL_COST);
+            String msg = String.format("Â§cSorry, you do not have enough donor points to play slots. You need at least Â§d%dÂ§c DP.", ROLL_COST);
             viewer.sendMessage(msg);
             return;
         }
@@ -78,7 +78,7 @@ public final class SlotsMenu extends AbstractMenu {
         if(dp.getRolls() < 1) {
             dp.setRolls(ROLL_QUANTITY);
             dp.setDp(dp.getDp() - ROLL_COST);
-            String msg = String.format("§ePurchased §d%d§e rolls for §d%d DP§e!", ROLL_QUANTITY, ROLL_COST);
+            String msg = String.format("Â§ePurchased Â§d%dÂ§e rolls for Â§d%d DPÂ§e!", ROLL_QUANTITY, ROLL_COST);
             viewer.sendMessage(msg);
         }
         
@@ -109,7 +109,7 @@ public final class SlotsMenu extends AbstractMenu {
         if(slot1 == null || slot2 == null || slot3 == null
         || slot1.getType() != slot2.getType() || slot2.getType() != slot3.getType()) {
             viewer.playSound(viewer.getLocation(), Sound.ENTITY_VILLAGER_NO, 1.0f, 1.0f);
-            viewer.sendMessage("§cSorry, you did not win this game.");
+            viewer.sendMessage("Â§cSorry, you did not win this game.");
             jackpot += JACKPOT_RAISE_AMOUNT;
             drawBottom();
             return;
@@ -119,10 +119,10 @@ public final class SlotsMenu extends AbstractMenu {
         
         //Announce the player's win and grant them their winnings.
         //Then reset the jackpot to the initial amount
-        Bukkit.broadcastMessage("§e[DONOR] " + viewer.getDisplayName() + "§e won slots! They won §d" + jackpot + " DP§e!");
+        Bukkit.broadcastMessage("Â§e[DONOR] " + viewer.getDisplayName() + "Â§e won slots! They won Â§d" + jackpot + " DPÂ§e!");
         dp.setDp(dp.getDp() + jackpot);
         viewer.getWorld().playSound(viewer.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-        viewer.sendMessage("§aCongratulations! You just won " + jackpot + " DP for winning slots!");
+        viewer.sendMessage("Â§aCongratulations! You just won " + jackpot + " DP for winning slots!");
         jackpot = JACKPOT_START;
         drawBottom();
         save();
@@ -159,17 +159,17 @@ public final class SlotsMenu extends AbstractMenu {
     private void drawBottom() {
         ItemStack START_BUTTON = makeItem(
                 Material.LIME_STAINED_GLASS_PANE, 
-                "§aStart!", 
-                "§eClick me to start playing!", 
-                String.format("§d%d DP§e = §d%d rolls§e.", ROLL_COST, ROLL_QUANTITY),
+                "Â§aStart!", 
+                "Â§eClick me to start playing!", 
+                String.format("Â§d%d DPÂ§e = Â§d%d rollsÂ§e.", ROLL_COST, ROLL_QUANTITY),
                 " ",
-                "§eThe current jackpot is §d" + jackpot + " DP§e!",
+                "Â§eThe current jackpot is Â§d" + jackpot + " DPÂ§e!",
                 " ",
-                String.format("§e§oYou have §d§o%d§e§o roll%s left.", dp.getRolls(), dp.getRolls() > 1 || dp.getRolls() == 0? "s" : "")
+                String.format("Â§eÂ§oYou have Â§dÂ§o%dÂ§eÂ§o roll%s left.", dp.getRolls(), dp.getRolls() > 1 || dp.getRolls() == 0? "s" : "")
         );
         
         //if not running, place the start button. otherwise, place an "in progress" item
-        ItemStack is = !running? START_BUTTON : makeItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "§9Good luck!");
+        ItemStack is = !running? START_BUTTON : makeItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "Â§9Good luck!");
         
         IntStream.range(inv.getSize() - 9, inv.getSize()).forEach(i -> inv.setItem(i, is));
         setDonorSlot(viewer, inv.getSize() - 5); //gold ingot with donor player's information
@@ -192,7 +192,7 @@ public final class SlotsMenu extends AbstractMenu {
             if(i % 2 == 0) is.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
             
             ItemMeta im = is.getItemMeta();
-            im.setDisplayName("§6Winner!");
+            im.setDisplayName("Â§6Winner!");
             im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             is.setItemMeta(im);
         }

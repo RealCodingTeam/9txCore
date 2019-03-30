@@ -65,7 +65,7 @@ public class BookOverloadListener implements Listener {
         if(!players.containsKey(player.getUniqueId()) || players.get(player.getUniqueId()) == Status.NOTHING) {
             //Since this is a very simple check, instead of taking action, the plugin
             //will just notify staff chat of this so staff can take a look at the player.
-            StaffChatCommand.sendStaffMessage("§4[BOOKS]", "§4Player §c" + player.getName() + "§4 signed a book without right clicking!!!");
+            StaffChatCommand.sendStaffMessage("Â§4[BOOKS]", "Â§4Player Â§c" + player.getName() + "Â§4 signed a book without right clicking!!!");
             event.setCancelled(true);
             players.remove(player.getUniqueId());
         }
@@ -127,13 +127,13 @@ public class BookOverloadListener implements Listener {
         //notify staff chat that a book was filtered
         //This is more of a warning because it's easy to
         //set this off.
-        StaffChatCommand.sendStaffMessage("§6[BOOKS]", "§6(Info) §eFiltered a book by §d" + player.getName() + "§e - Book had more than 10 pages.");
+        StaffChatCommand.sendStaffMessage("Â§6[BOOKS]", "Â§6(Info) Â§eFiltered a book by Â§d" + player.getName() + "Â§e - Book had more than 10 pages.");
     }
     
     //Return true if the player is not editing a book right now
     public static boolean shouldBlock(Player player) {
         if(!players.containsKey(player.getUniqueId()) || players.get(player.getUniqueId()) == Status.NOTHING) {
-            StaffChatCommand.sendStaffMessage("§4[MC|BSign]", "§4Player §c" + player.getName() + "§4 signed a book without right clicking!!!");
+            StaffChatCommand.sendStaffMessage("Â§4[MC|BSign]", "Â§4Player Â§c" + player.getName() + "Â§4 signed a book without right clicking!!!");
             return true;
         }
         return false;

@@ -13,20 +13,20 @@ public class DonorHelp extends SubDonorCommand {
     public void run(CommandSender sender, String[] args) {
         if(help_string == null) {
             int cmds = DonorCommand.getNumberOfSubCommands();
-            String fmt = "§a%s§e";
+            String fmt = "Â§a%sÂ§e";
             StringBuilder sb = new StringBuilder();
-            sb.append("§e[");
+            sb.append("Â§e[");
             for(int i = 0; i < cmds; i++) {
                 sb.append(fmt);
                 
                 if(i + 1 < cmds) sb.append(" | ");
             }
-            sb.append("§e]");
+            sb.append("Â§e]");
             
             help_string = String.format(sb.toString(), DonorCommand.getCommands().toArray());
         }
         
-        sender.sendMessage(ChatColor.GREEN + "§eTry /donor " + help_string);
+        sender.sendMessage(ChatColor.GREEN + "Â§eTry /donor " + help_string);
     }
     
 }

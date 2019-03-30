@@ -17,9 +17,9 @@ public class OresMenu extends AbstractMenu {
 
     @Override
     protected void build() {
-        inv.setItem(1, makeItem(Material.IRON_ORE,    1,    "§5Triple Ore Drops - 50 DP",      "§aTriple Ore Drops & Auto-Smelt for 1 Minute"));
-        inv.setItem(3, makeItem(Material.GOLD_ORE,    2,    "§5Triple Ore Drops - 100 DP",     "§aTriple Ore Drops & Auto-Smelt for 2 Minutes"));
-        inv.setItem(5, makeItem(Material.DIAMOND_ORE, 3,    "§5Triple Ore Drops - 200 DP",     "§aTriple Ore Drops & Auto-Smelt for 4 Minutes"));
+        inv.setItem(1, makeItem(Material.IRON_ORE,    1,    "Â§5Triple Ore Drops - 50 DP",      "Â§aTriple Ore Drops & Auto-Smelt for 1 Minute"));
+        inv.setItem(3, makeItem(Material.GOLD_ORE,    2,    "Â§5Triple Ore Drops - 100 DP",     "Â§aTriple Ore Drops & Auto-Smelt for 2 Minutes"));
+        inv.setItem(5, makeItem(Material.DIAMOND_ORE, 3,    "Â§5Triple Ore Drops - 200 DP",     "Â§aTriple Ore Drops & Auto-Smelt for 4 Minutes"));
     }
 
     @Override

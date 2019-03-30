@@ -45,7 +45,7 @@ public class BookProtocolBlocker {
                         //the server's perspective.
                         if(BookOverloadListener.shouldBlock(event.getPlayer())) {
                             event.setCancelled(true);
-                            event.getPlayer().sendMessage("§cCould not write book because you never right clicked it?!?");
+                            event.getPlayer().sendMessage("Â§cCould not write book because you never right clicked it?!?");
                         }
                     }
                 //not all PacketPlayCustomPayload packets have strings.

@@ -33,7 +33,7 @@ public final class DonorAddSet extends SubDonorCommand {
         String name = dp.getPlayer().getName();
         if(dp.getPlayer().isOnline()) name = dp.getPlayer().getPlayer().getDisplayName();
         
-        sender.sendMessage("§aSuccess! §6" + name + "§a now has §e" + amount + "§a points.");
+        sender.sendMessage("Â§aSuccess! Â§6" + name + "Â§anow has Â§e" + amount + "Â§a points.");
     }
     
 }

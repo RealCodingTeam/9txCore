@@ -18,8 +18,8 @@ public class MiscMenu extends AbstractMenu {
 
     @Override
     protected void build() {
-        inv.setItem(0, makeItem(Material.COOKIE,              "§5Feed Everyone - 5 DP",             "§aSaturation"));
-        inv.setItem(2, makeItem(Material.GOLDEN_APPLE,        "§5Heal Everyone - 15 DP",             "§aFull health"));
+        inv.setItem(0, makeItem(Material.COOKIE,              "Â§5Feed Everyone - 5 DP",             "Â§aSaturation"));
+        inv.setItem(2, makeItem(Material.GOLDEN_APPLE,        "Â§5Heal Everyone - 15 DP",             "Â§aFull health"));
         inv.setItem(4, getTimeItem());
         inv.setItem(6, getWeatherItem());
     }
@@ -31,14 +31,14 @@ public class MiscMenu extends AbstractMenu {
     
     private static ItemStack getTimeItem() {
         if(Bukkit.getWorld("world").getTime() >= 13050 || Bukkit.getWorld("world").getTime() < 1000) {
-            return makeItem(Material.SUNFLOWER, "§5Set Time To Day - 10 DP", "§aDay");
+            return makeItem(Material.SUNFLOWER, "Â§5Set Time To Day - 10 DP", "Â§aDay");
         }
         
-        return makeItem(Material.CLOCK, "§5Set Time To Night - 100 DP", "§aNight");
+        return makeItem(Material.CLOCK, "Â§5Set Time To Night - 100 DP", "Â§aNight");
     }
     
     private static ItemStack getWeatherItem() {
-        if(Bukkit.getWorld("world").hasStorm()) return makeItem(Material.BUCKET, "§5Set Weather To Clear - 10 DP", "§aClear weather");
-        return makeItem(Material.WATER_BUCKET, "§5Set Weather To Stormy - 100 DP", "§aThunderstorm");
+        if(Bukkit.getWorld("world").hasStorm()) return makeItem(Material.BUCKET, "Â§5Set Weather To Clear - 10 DP", "Â§aClear weather");
+        return makeItem(Material.WATER_BUCKET, "Â§5Set Weather To Stormy - 100 DP", "Â§aThunderstorm");
     }
 }

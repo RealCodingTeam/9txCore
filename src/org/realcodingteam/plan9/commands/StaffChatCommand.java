@@ -23,16 +23,16 @@ public class StaffChatCommand implements CommandExecutor, Listener {
         Bukkit.getPluginManager().registerEvents(this, NtxPlugin.instance);
     }
     
-    private static final String FORMAT = "§3Staff §8>> §9%s§8: §f%s";
+    private static final String FORMAT = "Â§3Staff Â§8>> Â§9%sÂ§8: Â§f%s";
     private static final List<UUID> chatPlayers = new ArrayList<>();
     
     private static String getOnlineStaff() {
         String[] names = Bukkit.getOnlinePlayers().stream()
                   .filter(p -> p.hasPermission("ntx.staff"))
                   .map(Player::getDisplayName)
-                  .map(n -> n + "§r")
+                  .map(n -> n + "Â§r")
                   .toArray(String[]::new);
-        return "§bOnline staff: §r" + Arrays.toString(names);
+        return "ï¿½bOnline staff: ï¿½r" + Arrays.toString(names);
     }
     
     //Remove a player from staff chat
@@ -52,8 +52,8 @@ public class StaffChatCommand implements CommandExecutor, Listener {
     
     //Format a staff chat message
     private static String formatMessage(String name, String msg) {
-        if(name.trim().isEmpty()) name = "§a[DannyDefaultName]";
-        if(msg.trim().isEmpty()) msg = "§aI'm cool lol!";
+        if(name.trim().isEmpty()) name = "Â§a[DannyDefaultName]";
+        if(msg.trim().isEmpty()) msg = "Â§aI'm cool lol!";
         return String.format(FORMAT, name, msg);
     }
     
@@ -128,7 +128,7 @@ public class StaffChatCommand implements CommandExecutor, Listener {
         }
         
         //They sent a message after the command, send it in staff chat.
-        name = p.getDisplayName().replace("[CONSOLE]", "[noob]");
+        name = p.getDisplayName().replace("[CONSOLE]", "Â§4[Â§6nÂ§2oÂ§1oÂ§5bÂ§0]");
         msg = String.join(" ", args);
         
         sendStaffMessage(name, msg);

@@ -84,7 +84,7 @@ public class NtxNerfListener implements Listener {
             ItemStack item = event.getWhoClicked().getInventory().getItem(event.getHotbarButton());
             
             if (item != null && item.getType().name().contains("SHULKER_BOX")) {
-                event.getWhoClicked().sendMessage("§c§lShulker boxes are not allowed in enderchests.");
+                event.getWhoClicked().sendMessage("Â§cÂ§lShulker boxes are not allowed in enderchests.");
                 event.setCancelled(true);
                 return;
             }
@@ -95,7 +95,7 @@ public class NtxNerfListener implements Listener {
             
             event.setCancelled(true);
             Player player = (Player) event.getWhoClicked();
-            player.sendMessage("§c§lShulker boxes are not allowed in enderchests.");
+            player.sendMessage("Â§cÂ§lShulker boxes are not allowed in enderchests.");
         }
     }
     
@@ -242,7 +242,7 @@ public class NtxNerfListener implements Listener {
             target.setVelocity(new Vector(0.0d, yvel, 0.0d));
         }
         
-        Bukkit.broadcastMessage("§6" + target.getName() + " has just bounced!");
+        Bukkit.broadcastMessage("Â§6" + target.getName() + " has just bounced!");
         Bukkit.getScheduler().runTaskLater(NtxPlugin.instance, () -> target.kickPlayer("Thanks for bouncing with us!"), 20 * 2);
     }
     

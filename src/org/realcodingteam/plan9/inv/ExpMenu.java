@@ -15,10 +15,11 @@ public final class ExpMenu extends AbstractMenu {
         open(viewer);
     }
     
+    @Override
     protected void build() {
-        inv.setItem(1, makeItem(Material.EXPERIENCE_BOTTLE,     "§5Ten XP Levels - 15 DP",         "§e10 §aexperience levels"));
-        inv.setItem(3, makeItem(Material.EXPERIENCE_BOTTLE, 2,  "§5Twenty XP Levels - 30 DP",      "§e20 §aexperience levels"));
-        inv.setItem(5, makeItem(Material.EXPERIENCE_BOTTLE, 3,  "§5Thirty XP Levels - 50 DP",      "§e30 §aexperience levels"));
+        inv.setItem(1, makeItem(Material.EXPERIENCE_BOTTLE,     "Â§5Ten XP Levels - 15 DP",         "Â§e10 Â§aexperience levels"));
+        inv.setItem(3, makeItem(Material.EXPERIENCE_BOTTLE, 2,  "Â§5Twenty XP Levels - 30 DP",      "Â§e20 Â§aexperience levels"));
+        inv.setItem(5, makeItem(Material.EXPERIENCE_BOTTLE, 3,  "Â§5Thirty XP Levels - 50 DP",      "Â§e30 Â§aexperience levels"));
     }
 
     @Override
