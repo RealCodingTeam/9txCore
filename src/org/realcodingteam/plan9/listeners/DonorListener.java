@@ -38,7 +38,8 @@ public class DonorListener implements Listener {
             }
             
             //Filter out what kinds of click the AbstractMenu will see
-            if(event.getClick().isKeyboardClick() 
+            if(event.getClick().isKeyboardClick()
+            || event.isShiftClick()
             || event.getCurrentItem() == null 
             || event.getCurrentItem().getType() == Material.AIR
             || !event.getClickedInventory().equals(menu.getInventory())) 
