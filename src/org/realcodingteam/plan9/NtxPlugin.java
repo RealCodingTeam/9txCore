@@ -7,6 +7,7 @@ import org.realcodingteam.plan9.chat.ChatListener;
 import org.realcodingteam.plan9.commands.DonorCommand;
 import org.realcodingteam.plan9.commands.StaffChatCommand;
 import org.realcodingteam.plan9.inv.AbstractMenu;
+import org.realcodingteam.plan9.inv.SlotsMenu;
 import org.realcodingteam.plan9.listeners.BookOverloadListener;
 import org.realcodingteam.plan9.listeners.DonorListener;
 import org.realcodingteam.plan9.listeners.DrownedDupeListener;
@@ -47,6 +48,7 @@ public class NtxPlugin extends JavaPlugin {
                                  .map(DonorPlayer::getDonorPlayer)
                                  .forEach(DonorPlayer::saveDonor);
         AbstractMenu.closeOpenInvs();
+        SlotsMenu.save();
     }
     
     private void initConfig() {

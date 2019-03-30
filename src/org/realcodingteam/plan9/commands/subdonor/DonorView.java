@@ -29,7 +29,10 @@ public class DonorView extends SubDonorCommand {
             return;
         }
         
-        sender.sendMessage(ChatColor.GOLD + dp.getPlayer().getName() + ChatColor.GREEN + ": DP Balance is " + ChatColor.GOLD + dp.getDp());
+        String name = dp.getPlayer().getName();
+        if(dp.getPlayer().isOnline()) name = dp.getPlayer().getPlayer().getDisplayName();
+        
+        sender.sendMessage(ChatColor.GOLD + name + ChatColor.GREEN + ": DP Balance is " + ChatColor.GOLD + dp.getDp());
     }
     
     

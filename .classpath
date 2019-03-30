@@ -9,6 +9,5 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/lol/ProtocolLib.jar"/>
 	<classpathentry kind="lib" path="C:/lol/Danny-EssentialsX-2.16.1.5.jar"/>
-	<classpathentry kind="lib" path="C:/lol/bsh-2.0b6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

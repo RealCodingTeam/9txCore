@@ -26,25 +26,36 @@ public class DonorPlayer {
     private String nick;
     private boolean hasReceivedDP;
     private long lastLogin;
+    private int rolls;
     
     public DonorPlayer(UUID id) {
         this.id = id;
         this.dp = 0;
         this.hasReceivedDP = false;
         this.nick = "f";
+        this.rolls = 0;
         this.setLastLogin(System.currentTimeMillis());
     }
     
-    public DonorPlayer(UUID id, int dp, boolean hasReceivedDP, String nick) {
+    public DonorPlayer(UUID id, int dp, boolean hasReceivedDP, String nick, int rolls) {
         this.id = id;
         this.dp = dp;
         this.hasReceivedDP = hasReceivedDP;
         this.nick = nick;
+        this.rolls = rolls;
         this.setLastLogin(System.currentTimeMillis());
     }
     
     public OfflinePlayer getPlayer() {
         return Bukkit.getOfflinePlayer(id);
+    }
+    
+    public int getRolls() {
+        return rolls;
+    }
+    
+    public void setRolls(int rolls) {
+        this.rolls = rolls;
     }
 
     public UUID getId() {
@@ -109,7 +120,11 @@ public class DonorPlayer {
         int dp = yaml.getInt("points");
         boolean has = yaml.getBoolean("hasReceived");
         String c = yaml.getString("nick");
-        DonorPlayer donor = new DonorPlayer(id, dp, has, c);
+        
+        if(!yaml.contains("rolls")) yaml.set("rolls", 0);
+        int rolls = yaml.getInt("rolls");
+        
+        DonorPlayer donor = new DonorPlayer(id, dp, has, c, rolls);
         
         donors.put(id, donor);
         return donor;
@@ -123,6 +138,7 @@ public class DonorPlayer {
             yaml.set("points", dp.getDp());
             yaml.set("hasReceived", dp.hasReceivedDP()); 
             yaml.set("nick", dp.getNick());
+            yaml.set("rolls", dp.getRolls());
             donors.remove(dp.getId());
             
             try {

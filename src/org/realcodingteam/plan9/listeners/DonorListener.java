@@ -17,6 +17,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.realcodingteam.plan9.inv.AbstractMenu;
+import org.realcodingteam.plan9.inv.MiscMenu;
+import org.realcodingteam.plan9.inv.SlotsMenu;
 import org.realcodingteam.plan9.objects.DonorPlayer;
 import org.realcodingteam.plan9.objects.effects.OreEffects;
 
@@ -29,6 +31,11 @@ public class DonorListener implements Listener {
         if(holder instanceof AbstractMenu) {
             event.setCancelled(true);
             AbstractMenu menu = (AbstractMenu) holder;
+            
+            if(menu instanceof MiscMenu && SlotsMenu.handle(event)) {
+                event.setCancelled(true);
+                return;
+            }
             
             //Filter out what kinds of click the AbstractMenu will see
             if(event.getClick().isKeyboardClick() 

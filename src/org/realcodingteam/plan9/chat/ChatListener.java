@@ -34,10 +34,7 @@ public final class ChatListener implements Listener {
         if(!event.getPlayer().hasPermission("ntx.item")) return;
         Player player = event.getPlayer();
 		User user = ess.getUser(player);
-        if(user.isMuted() || user.isHidden()) {
-			event.setCancelled(true);
-			return;
-		}
+        if(user.isMuted() || user.isHidden()) return;
         
         List<Integer> items = new ArrayList<>(); //Prevent players from sending the same item more than once
         TextComponent base = new TextComponent();
@@ -81,37 +78,31 @@ public final class ChatListener implements Listener {
     private static SimpleEntry<Integer, ItemStack> getItemForChar(Player player, char in) {
         int slot = -1; //-1 = invalid slot
         ItemStack item = null; //null = invalid item
-
+        
         PlayerInventory inv = player.getInventory();
         
-        switch(in) {
+        switch(Character.toLowerCase(in)) {
             case 'h': //Helmet slot
-            case 'H':
                 item = inv.getHelmet();
                 slot = 10;
                 break;
             case 'c': //Chestplate slot
-            case 'C':
                 item = inv.getChestplate();
                 slot = 11;
                 break;
             case 'l': //Leggings slot
-            case 'L':
                 item = inv.getLeggings();
                 slot = 12;
                 break;
             case 'b': //Boots slot
-            case 'B':
                 item = inv.getBoots();
                 slot = 13;
                 break;
             case 'o': //Offhand
-            case 'O':
                 item = inv.getItemInOffHand();
                 slot = 14;
                 break;
             case 'i':
-            case 'I':
                 item = inv.getItemInMainHand();
                 slot = inv.getHeldItemSlot();
                 break;
