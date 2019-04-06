@@ -21,23 +21,26 @@ public final class SlotsMenu extends AbstractMenu {
     
     private static final Material[] MATERIALS;           //The materials that'll be used in the game 
     private static final int ROLL_COST = 1;              //Cost of purchasing rolls
-    private static final int ROLL_QUANTITY = 5;          //How many rolls will be purchased
-    private static final int JACKPOT_RAISE_AMOUNT = 3;   //When a game is lost, the jackpot will be raised by this
+    private static final int ROLL_QUANTITY = 4;          //How many rolls will be purchased
+    private static final double JACKPOT_RAISE_AMOUNT = .40;   //When a game is lost, the jackpot will be raised by this
     private static final int JACKPOT_START = 20;         //Initial jackpot amount
     private static final int ROLL_ANIMATION_AMOUNT = 20; //How many times the slots should roll before stopping
     private static final int ROLL_ANIMATION_SPEED = 3;   //Delay in ticks between each roll. Lower means faster
     
-    private static int jackpot; //Current jackpot
+    private static double jackpot; //Current jackpot
     
     static {
-        //Use all glazed terracotta blocks in the game.
-        //If I know my math, this means winning is a 1/4096 chance? (16 blocks ^ 3 in a row needed)
+        //Use all glazed terracotta and wool blocks in the game.
+        //If I know my math, this means winning is a 1/32768 chance? (32 blocks ^ 3 in a row needed)
         MATERIALS = Arrays.stream(Material.values())
-                          .filter(n -> n.name().endsWith("GLAZED_TERRACOTTA"))
+                          .filter(n -> {
+                              return n.name().endsWith("GLAZED_TERRACOTTA")
+                                  || n.name().endsWith("WOOL");
+                          })
                           .toArray(Material[]::new);
         
         if(!NtxPlugin.instance.getConfig().contains("jackpot")) save();
-        jackpot = NtxPlugin.instance.getConfig().getInt("jackpot");
+        jackpot = NtxPlugin.instance.getConfig().getDouble("jackpot");
     }
     
     private boolean running = false; //Used to track a running game
@@ -65,7 +68,7 @@ public final class SlotsMenu extends AbstractMenu {
     @Override
     public void onInventoryClick(ItemStack item) {
         //only care about clicking on the start button
-        if(item.getType() != Material.LIME_STAINED_GLASS_PANE) return;
+        if(item.getType() != Material.LIME_STAINED_GLASS_PANE || running) return;
             
         //ensure the player can play
         if(dp.getDp() < ROLL_COST && dp.getRolls() < 1) {
@@ -119,10 +122,10 @@ public final class SlotsMenu extends AbstractMenu {
         
         //Announce the player's win and grant them their winnings.
         //Then reset the jackpot to the initial amount
-        Bukkit.broadcastMessage("§e[DONOR] " + viewer.getDisplayName() + "§e won slots! They won §d" + jackpot + " DP§e!");
-        dp.setDp(dp.getDp() + jackpot);
+        Bukkit.broadcastMessage("§e[DONOR] " + viewer.getDisplayName() + "§e won slots! They won §d" + (int)jackpot + " DP§e!");
+        dp.setDp(dp.getDp() + (int)jackpot);
         viewer.getWorld().playSound(viewer.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-        viewer.sendMessage("§aCongratulations! You just won " + jackpot + " DP for winning slots!");
+        viewer.sendMessage("§aCongratulations! You just won " + (int)jackpot + " DP for winning slots!");
         jackpot = JACKPOT_START;
         drawBottom();
         save();
@@ -163,13 +166,13 @@ public final class SlotsMenu extends AbstractMenu {
                 "§eClick me to start playing!", 
                 String.format("§d%d DP§e = §d%d rolls§e.", ROLL_COST, ROLL_QUANTITY),
                 " ",
-                "§eThe current jackpot is §d" + jackpot + " DP§e!",
+                "§eThe current jackpot is §d" + (int)jackpot + " DP§e!",
                 " ",
                 String.format("§e§oYou have §d§o%d§e§o roll%s left.", dp.getRolls(), dp.getRolls() > 1 || dp.getRolls() == 0? "s" : "")
         );
         
         //if not running, place the start button. otherwise, place an "in progress" item
-        ItemStack is = !running? START_BUTTON : makeItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "§9Good luck!");
+        ItemStack is = !running? START_BUTTON : makeItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "§9Good luck!", "", "§eThe current jackpot is §d" + (int)jackpot + " DP§e!");
         
         IntStream.range(inv.getSize() - 9, inv.getSize()).forEach(i -> inv.setItem(i, is));
         setDonorSlot(viewer, inv.getSize() - 5); //gold ingot with donor player's information
@@ -177,7 +180,7 @@ public final class SlotsMenu extends AbstractMenu {
     
     //save the jackpot 
     public static void save() {
-        int toSave = JACKPOT_START;
+        double toSave = JACKPOT_START;
         if(jackpot != 0) toSave = jackpot; //unitialized jackpot value is 0 
         
         NtxPlugin.instance.getConfig().set("jackpot", toSave);

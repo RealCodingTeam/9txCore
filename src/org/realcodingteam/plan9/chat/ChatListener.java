@@ -72,6 +72,7 @@ public final class ChatListener implements Listener {
         if(items.isEmpty()) return; //If no item tags were found, return
         event.setCancelled(true);
         Bukkit.getOnlinePlayers().forEach(p -> p.spigot().sendMessage(base));
+        Bukkit.getConsoleSender().sendMessage("[9txCore Item Chat] <CHAT>: " + event.getPlayer().getDisplayName() + ": " + event.getMessage());
     }
     
     //Converts a char into <Integer, ItemStack> pair.
