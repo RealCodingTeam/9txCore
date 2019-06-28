@@ -32,7 +32,7 @@ public class StaffChatCommand implements CommandExecutor, Listener {
                   .map(Player::getDisplayName)
                   .map(n -> n + "§r")
                   .toArray(String[]::new);
-        return "�bOnline staff: �r" + Arrays.toString(names);
+        return "§bOnline staff: §r" + Arrays.toString(names);
     }
     
     //Remove a player from staff chat

@@ -2,12 +2,8 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/lol/server.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="https://jd.bukkit.org/"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="C:/lol/ProtocolLib.jar"/>
-	<classpathentry kind="lib" path="C:/lol/Danny-EssentialsX-2.16.1.5.jar"/>
+	<classpathentry kind="lib" path="/mnt/dev/etc/jars/Danny-EssentialsX-2.16.1.5.jar"/>
+	<classpathentry kind="lib" path="/mnt/dev/etc/jars/ProtocolLib.jar"/>
+	<classpathentry kind="lib" path="/mnt/dev/etc/jars/server.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
