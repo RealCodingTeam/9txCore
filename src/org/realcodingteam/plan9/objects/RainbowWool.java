@@ -48,7 +48,7 @@ public final class RainbowWool {
         im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         WOOL.setItemMeta(im);
         
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(NtxPlugin.instance, this::next, 10L, 10L);
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(NtxPlugin.getInstance(), this::next, 10L, 10L);
     }
     
     private void next() {

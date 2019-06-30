@@ -40,7 +40,7 @@ public final class Nms {
         } catch(Exception e) {
             e.printStackTrace();
             failed = true;
-            NtxPlugin.instance.getLogger().warning("Failed to setup NMS reflection. Item tags in chat will not work.");
+            NtxPlugin.getInstance().getLogger().warning("Failed to setup NMS reflection. Item tags in chat will not work.");
         }
     }
     

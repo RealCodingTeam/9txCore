@@ -43,7 +43,7 @@ public class NickMenu extends AbstractMenu {
         inv.setItem(15, makeItem(Material.WHITE_WOOL,        "§fWhite §fname"));
         
         if(viewer.hasPermission("ntx.end")) {
-            taskid = Bukkit.getScheduler().scheduleSyncRepeatingTask(NtxPlugin.instance, () -> {
+            taskid = Bukkit.getScheduler().scheduleSyncRepeatingTask(NtxPlugin.getInstance(), () -> {
                 inv.setItem(16, RainbowWool.instance.getWool());
             }, 0L, 10L);
         } else {

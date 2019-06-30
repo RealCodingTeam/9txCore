@@ -107,7 +107,7 @@ public class DonorPlayer {
     }
     
     public static DonorPlayer loadDonor(UUID id) {
-        File playerFile = new File(NtxPlugin.instance.getDataFolder(), "Players/" + id + ".txt");
+        File playerFile = new File(NtxPlugin.getInstance().getDataFolder(), "Players/" + id + ".txt");
         
         if (!playerFile.exists()) {
             DonorPlayer d = new DonorPlayer(id);
@@ -132,7 +132,7 @@ public class DonorPlayer {
     
     public static void saveDonor(DonorPlayer... players) {
         for(DonorPlayer dp : players) {
-            File playerFile = new File(NtxPlugin.instance.getDataFolder(), "Players/" + dp.getId() + ".txt");
+            File playerFile = new File(NtxPlugin.getInstance().getDataFolder(), "Players/" + dp.getId() + ".txt");
             FileConfiguration yaml = YamlConfiguration.loadConfiguration(playerFile);
             
             yaml.set("points", dp.getDp());
@@ -150,8 +150,8 @@ public class DonorPlayer {
     }
     
     public static void runDonorTask() {
-        BukkitScheduler scheduler = NtxPlugin.instance.getServer().getScheduler();
-        scheduler.scheduleSyncRepeatingTask(NtxPlugin.instance, new Runnable() {
+        BukkitScheduler scheduler = NtxPlugin.getInstance().getServer().getScheduler();
+        scheduler.scheduleSyncRepeatingTask(NtxPlugin.getInstance(), new Runnable() {
             @Override
             public void run() {
                 for (DonorPlayer dp : donors.values()) {

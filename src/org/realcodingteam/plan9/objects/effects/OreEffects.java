@@ -44,7 +44,7 @@ public class OreEffects extends Effects {
             TRIPLE_ORE_TIME += duration;
             
             if(taskId != -1) Bukkit.getScheduler().cancelTask(taskId);
-            taskId = Bukkit.getScheduler().runTaskLater(NtxPlugin.instance, () -> {
+            taskId = Bukkit.getScheduler().runTaskLater(NtxPlugin.getInstance(), () -> {
                 if(((TRIPLE_ORE_TIME - Instant.now().toEpochMilli()) / 1000) <= 3) {
                     Bukkit.broadcastMessage("§e[DONOR] §cTriple ore drops have expired.");
                     Bukkit.getScheduler().cancelTask(taskId);

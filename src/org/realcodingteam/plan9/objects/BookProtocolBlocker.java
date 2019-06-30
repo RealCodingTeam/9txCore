@@ -32,7 +32,7 @@ public class BookProtocolBlocker {
         
         packets.add(PacketType.Play.Client.CUSTOM_PAYLOAD);
         
-        params.types(packets).plugin(NtxPlugin.instance).gamePhase(GamePhase.PLAYING).connectionSide(ConnectionSide.CLIENT_SIDE).listenerPriority(ListenerPriority.HIGHEST);
+        params.types(packets).plugin(NtxPlugin.getInstance()).gamePhase(GamePhase.PLAYING).connectionSide(ConnectionSide.CLIENT_SIDE).listenerPriority(ListenerPriority.HIGHEST);
         
         manager.addPacketListener(new PacketAdapter(params) {        
             @Override

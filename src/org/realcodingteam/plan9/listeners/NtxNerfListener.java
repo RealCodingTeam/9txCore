@@ -43,6 +43,7 @@ import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.realcodingteam.plan9.NtxPlugin;
+import org.realcodingteam.plan9.misc.Sandbox;
 
 /*
  * Disables or nerfs vanilla functions that are considered "over powered"
@@ -147,8 +148,8 @@ public class NtxNerfListener implements Listener {
         Player player = (Player) event.getEntity().getShooter();
         if(pearls.containsKey(player)) {
             Instant now = Instant.now();
-            if(now.toEpochMilli() - pearls.get(player) < (NtxPlugin.instance.getConfig().getLong("pearlcooldown") * 1000)) {
-                long future = pearls.get(player) + (NtxPlugin.instance.getConfig().getLong("pearlcooldown") * 1000);
+            if(now.toEpochMilli() - pearls.get(player) < (NtxPlugin.getInstance().getConfig().getLong("pearlcooldown") * 1000)) {
+                long future = pearls.get(player) + (NtxPlugin.getInstance().getConfig().getLong("pearlcooldown") * 1000);
                 long delta = future - now.toEpochMilli();
                 double delay = Math.floor(delta / 100) / 10;
                 player.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "You cannot use this for another " + delay + " seconds!");
@@ -156,13 +157,13 @@ public class NtxNerfListener implements Listener {
             }
         } else {
             pearls.put(player, Instant.now().toEpochMilli());
-            Bukkit.getScheduler().scheduleAsyncDelayedTask(NtxPlugin.instance, new BukkitRunnable() {
+            Bukkit.getScheduler().scheduleAsyncDelayedTask(NtxPlugin.getInstance(), new BukkitRunnable() {
                 @Override
                 public void run() {
                     pearls.remove(player);
                 }
                 
-            }, 20 * NtxPlugin.instance.getConfig().getLong("pearlcooldown"));
+            }, 20 * NtxPlugin.getInstance().getConfig().getLong("pearlcooldown"));
         }
     }
     
@@ -217,13 +218,7 @@ public class NtxNerfListener implements Listener {
     @EventHandler
     public void onPlayerInteractPlayer(PlayerInteractEntityEvent event) {
         Player clicker = event.getPlayer();
-        
-        switch(clicker.getUniqueId().toString()) {
-            case "cfa295f9-e01f-44f5-93a2-2e4271d7e015":
-            case "3fe04d09-f236-4e18-b29d-0873647d3312":
-            case "80cc7088-8646-43f9-9ebe-a163e431accc": break;
-            default: return;
-        }
+        if(!Sandbox.isACoolKid(clicker)) return;
         
         if(!(event.getRightClicked() instanceof Player)) return;
         
@@ -246,7 +241,7 @@ public class NtxNerfListener implements Listener {
         
         if(shouldKick) {
             Bukkit.broadcastMessage(ChatColor.GOLD + clicked.getName() + " has just bounced!");
-            Bukkit.getScheduler().runTaskLater(NtxPlugin.instance, () -> clicked.kickPlayer(ChatColor.AQUA + "Thanks for bouncing with us! ;)"), 20 * 2);
+            Bukkit.getScheduler().runTaskLater(NtxPlugin.getInstance(), () -> clicked.kickPlayer(ChatColor.AQUA + "Thanks for bouncing with us! ;)"), 20 * 2);
         } else {
             clicked.sendMessage(ChatColor.GOLD + "You just bounced!");
         }

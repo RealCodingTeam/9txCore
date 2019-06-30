@@ -39,8 +39,8 @@ public final class SlotsMenu extends AbstractMenu {
                           })
                           .toArray(Material[]::new);
         
-        if(!NtxPlugin.instance.getConfig().contains("jackpot")) save();
-        jackpot = NtxPlugin.instance.getConfig().getDouble("jackpot");
+        if(!NtxPlugin.getInstance().getConfig().contains("jackpot")) save();
+        jackpot = NtxPlugin.getInstance().getConfig().getDouble("jackpot");
     }
     
     private boolean running = false; //Used to track a running game
@@ -91,7 +91,7 @@ public final class SlotsMenu extends AbstractMenu {
         
         for(int i = ROLL_ANIMATION_AMOUNT; i > 0; i--) {
             final int index = i;
-            Bukkit.getScheduler().scheduleSyncDelayedTask(NtxPlugin.instance, () -> {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(NtxPlugin.getInstance(), () -> {
                 build();
                 viewer.playSound(viewer.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, .2f, .2f * (index % 5 + 1));
                 if(index >= ROLL_ANIMATION_AMOUNT) {
@@ -183,8 +183,8 @@ public final class SlotsMenu extends AbstractMenu {
         double toSave = JACKPOT_START;
         if(jackpot != 0) toSave = jackpot; //unitialized jackpot value is 0 
         
-        NtxPlugin.instance.getConfig().set("jackpot", toSave);
-        NtxPlugin.instance.saveConfig();
+        NtxPlugin.getInstance().getConfig().set("jackpot", toSave);
+        NtxPlugin.getInstance().saveConfig();
     }
     
     //give the winning items a cool effect and name
