@@ -41,8 +41,8 @@ public class DonorPay extends SubDonorCommand {
         reciever.setDp(reciever.getDp() + amount);
         DonorPlayer.saveDonor(donor, reciever);
         
-        String to = "§aYou have donated %d donor point%s to %s§a!";
-        String from = "§aYou recieved %d donor point%s from %s§a!";
+        String to = ChatColor.GREEN + "You have donated %d donor point%s to %s" + ChatColor.GREEN + "!";
+        String from = ChatColor.GREEN + "You recieved %d donor point%s from %s" + ChatColor.GREEN + "!";
         sender.sendMessage(String.format(to, amount, amount > 1? "s" : "", recieverP.getDisplayName()));
         recieverP.sendMessage(String.format(from, amount, amount > 1? "s" : "", donorP.getDisplayName()));
     }

@@ -1,14 +1,15 @@
 package org.realcodingteam.plan9.chat;
 
+import java.util.Optional;
+
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
+import org.realcodingteam.plan9.magic.Nms;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.minecraft.server.v1_13_R2.NBTTagCompound;
 
 public final class ItemTag {
     
@@ -43,12 +44,12 @@ public final class ItemTag {
     
     //Takes the item and creates the SHOW_ITEM hover event for it
     private static HoverEvent getEvent(ItemStack item) {
-        net.minecraft.server.v1_13_R2.ItemStack mcIs = CraftItemStack.asNMSCopy(item);
-        NBTTagCompound tag = new NBTTagCompound();
-        mcIs.save(tag); //Converts the item to JSON
-        String json = tag.toString();
+        Optional<String> json = Nms.toJson(item);
+        if(!json.isPresent()) {
+            return new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(ChatColor.RED + proper(item.getType())));
+        }
         
-        return new HoverEvent(HoverEvent.Action.SHOW_ITEM, new BaseComponent[] { new TextComponent(json) });
+        return new HoverEvent(HoverEvent.Action.SHOW_ITEM, new BaseComponent[] { new TextComponent(json.get()) });
     }
     
     //Will either return the item's custom name (anvil name) or the
