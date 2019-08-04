@@ -9,7 +9,6 @@ import java.util.Map;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.enchantments.Enchantment;
@@ -33,7 +32,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -41,9 +39,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 import org.realcodingteam.plan9.NtxPlugin;
-import org.realcodingteam.plan9.misc.Sandbox;
 
 /*
  * Disables or nerfs vanilla functions that are considered "over powered"
@@ -212,38 +208,6 @@ public class NtxNerfListener implements Listener {
                 }
                 return;
             }
-        }
-    }
-    
-    @EventHandler
-    public void onPlayerInteractPlayer(PlayerInteractEntityEvent event) {
-        Player clicker = event.getPlayer();
-        if(!Sandbox.isACoolKid(clicker)) return;
-        
-        if(!(event.getRightClicked() instanceof Player)) return;
-        
-        Player clicked = (Player)event.getRightClicked();
-        //only bounce staff members
-        if(!clicked.hasPermission("ntx.staff")) return;
-        
-        //shouldKick -> true if sneaking and mainhand item is barrier
-        ItemStack mainhand = clicker.getInventory().getItemInMainHand();
-        boolean shouldKick = 
-                clicker.isSneaking() 
-                && mainhand != null 
-                && mainhand.getType() == Material.BARRIER;
-        
-        if(!clicked.isOnGround()) return;
-        
-        clicked.getWorld().playSound(clicked.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f);
-        clicked.setFlying(false);
-        clicked.setVelocity(new Vector(0, 10, 0));
-        
-        if(shouldKick) {
-            Bukkit.broadcastMessage(ChatColor.GOLD + clicked.getName() + " has just bounced!");
-            Bukkit.getScheduler().runTaskLater(NtxPlugin.getInstance(), () -> clicked.kickPlayer(ChatColor.AQUA + "Thanks for bouncing with us! ;)"), 20 * 2);
-        } else {
-            clicked.sendMessage(ChatColor.GOLD + "You just bounced!");
         }
     }
     

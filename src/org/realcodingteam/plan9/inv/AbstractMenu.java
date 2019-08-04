@@ -3,6 +3,7 @@ package org.realcodingteam.plan9.inv;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,11 +45,11 @@ public abstract class AbstractMenu implements InventoryHolder {
     
     protected Inventory inv;
     protected final Player viewer;
-    protected final boolean has_parent;
+    protected final Consumer<Player> parent;
     
-    public AbstractMenu(int size, String title, Player viewer, boolean has_parent) {
+    public AbstractMenu(int size, String title, Player viewer, Consumer<Player> parent) {
         this.viewer = viewer;
-        this.has_parent = has_parent;
+        this.parent = parent;
         if(title.length() > 32) title = title.substring(0, 32);
         inv = Bukkit.createInventory(this, size, title);
         setDonorSlot(viewer, inv.getSize() - 1);
@@ -70,7 +71,7 @@ public abstract class AbstractMenu implements InventoryHolder {
         
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.GREEN + "Your balance is " + ChatColor.GOLD + dp.getDp());
-        if(has_parent) lore.add(ChatColor.GREEN + "" + ChatColor.UNDERLINE + "Click me to go back a menu!");
+        if(parent != null) lore.add(ChatColor.GREEN + "" + ChatColor.UNDERLINE + "Click me to go back a menu!");
         
         ItemStack donor_item = makeItem(Material.GOLD_INGOT, ChatColor.DARK_PURPLE + "Balance", lore.toArray(new String[0]));
         inv.setItem(slot, donor_item);
@@ -83,8 +84,8 @@ public abstract class AbstractMenu implements InventoryHolder {
     public abstract void onInventoryClick(ItemStack item);
     
     public void openParent() {
-        if(has_parent) {
-            new RootMenu(viewer);
+        if(parent != null) {
+            parent.accept(viewer);
         }
     }
 }

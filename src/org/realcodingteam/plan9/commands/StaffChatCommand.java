@@ -11,10 +11,18 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.realcodingteam.plan9.NtxPlugin;
 
-public class StaffChatCommand implements CommandExecutor {
+public class StaffChatCommand implements CommandExecutor, Listener {
     
     private static final String FORMAT = "§3Staff §8>> §9%s§8: §f%s";
+    
+    public StaffChatCommand() {
+        Bukkit.getPluginManager().registerEvents(this, NtxPlugin.getInstance());
+    }
     
     private static String getOnlineStaff() {
         String[] names = Bukkit.getOnlinePlayers().stream()
@@ -34,9 +42,6 @@ public class StaffChatCommand implements CommandExecutor {
     
     //Send a message in staff chat
     public static void sendStaffMessage(String name, String msg) {
-        msg = ChatColor.translateAlternateColorCodes('^', msg);
-        msg = msg.replace("" + ChatColor.MAGIC, "")
-                 .replace("" + ChatColor.STRIKETHROUGH, "");
         String formatted = formatMessage(name, msg);
         
         List<Player> staff = Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission("ntx.staff")).collect(Collectors.toList());
@@ -82,6 +87,29 @@ public class StaffChatCommand implements CommandExecutor {
         
         sendStaffMessage(name, msg);
         return true;
+    }
+    
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event) {
+        Player who = event.getPlayer();
+        if(!who.hasPermission("ntx.staff")) return;
+        
+        String[] msg = event.getMessage().split(" ");
+        if(!msg[0].toLowerCase().startsWith("-sc")) return;
+        
+        event.setCancelled(true);
+        
+        if(msg.length < 2) {
+            who.sendMessage(getOnlineStaff());
+            return;
+        }
+        
+        String content = String.join(" ", Arrays.copyOfRange(msg, 1, msg.length));
+        content = ChatColor.translateAlternateColorCodes('^', content);
+        content = content.replace("" + ChatColor.MAGIC, "")
+                 .replace("" + ChatColor.STRIKETHROUGH, "");
+        
+        sendStaffMessage(who.getDisplayName().replace("[CONSOLE]", "§4[§6n§2o§1o§5b§0]"), content);
     }
     
 }

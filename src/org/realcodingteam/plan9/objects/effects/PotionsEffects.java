@@ -13,21 +13,21 @@ import org.bukkit.potion.PotionEffectType;
 public final class PotionsEffects extends Effects {
     
     private static final PotionsEffects[] SPEED = { 
-            new PotionsEffects(15, PotionEffectType.SPEED, 120 * 20, 2),
-            new PotionsEffects(30, PotionEffectType.SPEED, 240 * 20, 2),
-            new PotionsEffects(50, PotionEffectType.SPEED, 360 * 20, 2),
+            new PotionsEffects(20, PotionEffectType.SPEED, 120 * 20, 2),
+            new PotionsEffects(40, PotionEffectType.SPEED, 240 * 20, 2),
+            new PotionsEffects(55, PotionEffectType.SPEED, 360 * 20, 2),
     };
     
     private static final PotionsEffects[] INVIS = {
-        new PotionsEffects(15, PotionEffectType.INVISIBILITY, 120 * 20, 0),
-        new PotionsEffects(30, PotionEffectType.INVISIBILITY, 240 * 20, 0),
-        new PotionsEffects(50, PotionEffectType.INVISIBILITY, 360 * 20, 0),
+        new PotionsEffects(20, PotionEffectType.INVISIBILITY, 120 * 20, 0),
+        new PotionsEffects(40, PotionEffectType.INVISIBILITY, 240 * 20, 0),
+        new PotionsEffects(55, PotionEffectType.INVISIBILITY, 360 * 20, 0),
     };
     
     private static final PotionsEffects[] HASTE = {
-        new PotionsEffects(50, PotionEffectType.FAST_DIGGING, 120 * 20, 1),
-        new PotionsEffects(100, PotionEffectType.FAST_DIGGING, 240 * 20, 1),
-        new PotionsEffects(150, PotionEffectType.FAST_DIGGING, 360 * 20, 1),
+        new PotionsEffects(65, PotionEffectType.FAST_DIGGING, 120 * 20, 1),
+        new PotionsEffects(115, PotionEffectType.FAST_DIGGING, 240 * 20, 1),
+        new PotionsEffects(160, PotionEffectType.FAST_DIGGING, 360 * 20, 1),
     };
     
     private static final PotionsEffects[] GLOWING = {
@@ -37,15 +37,15 @@ public final class PotionsEffects extends Effects {
     };
     
     private static final PotionsEffects[] REGEN = {
-        new PotionsEffects(30,  PotionEffectType.REGENERATION, 30 * 20, 1),
-        new PotionsEffects(60,  PotionEffectType.REGENERATION, 60 * 20, 1),
-        new PotionsEffects(120, PotionEffectType.REGENERATION, 120 * 20, 1),
+        new PotionsEffects(20,  PotionEffectType.REGENERATION, 30 * 20, 1),
+        new PotionsEffects(45,  PotionEffectType.REGENERATION, 60 * 20, 1),
+        new PotionsEffects(100, PotionEffectType.REGENERATION, 120 * 20, 1),
     };
     
     private static final PotionsEffects GRACE = new PotionsEffects(50, PotionEffectType.DOLPHINS_GRACE, 120 * 20, 0);
-    private static final PotionsEffects FIRE  = new PotionsEffects(30, PotionEffectType.FIRE_RESISTANCE, 240 * 20, 0);
-    private static final PotionsEffects CONDUIT = new PotionsEffects(100, PotionEffectType.CONDUIT_POWER, 240 * 20, 0);
-    private static final PotionsEffects SLOW_FALL = new PotionsEffects(30, PotionEffectType.SLOW_FALLING, 180 * 20, 0);
+    private static final PotionsEffects FIRE  = new PotionsEffects(50, PotionEffectType.FIRE_RESISTANCE, 360 * 20, 0);
+    private static final PotionsEffects CONDUIT = new PotionsEffects(85, PotionEffectType.CONDUIT_POWER, 240 * 20, 0);
+    private static final PotionsEffects SLOW_FALL = new PotionsEffects(45, PotionEffectType.SLOW_FALLING, 180 * 20, 0);
 
     protected PotionsEffects(int cost, PotionEffectType type, int duration, int amp) {
         super(cost);

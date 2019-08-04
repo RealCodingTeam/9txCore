@@ -12,7 +12,6 @@ import org.realcodingteam.plan9.listeners.BookOverloadListener;
 import org.realcodingteam.plan9.listeners.DonorListener;
 import org.realcodingteam.plan9.listeners.DrownedDupeListener;
 import org.realcodingteam.plan9.listeners.NtxNerfListener;
-import org.realcodingteam.plan9.misc.Sandbox;
 import org.realcodingteam.plan9.objects.BookProtocolBlocker;
 import org.realcodingteam.plan9.objects.DonorPlayer;
 
@@ -43,14 +42,12 @@ public class NtxPlugin extends JavaPlugin {
         
         enableBookChecker(); //ProtocolLib required written book chunk overload dupe prevention
         enableItemChat();    //Displaying items in chat, requires Essentials to work to prevent mute bypass
-        
-        Sandbox.fillWithSand();
     }
     
     @Override
     public void onDisable() {
         //save all donor players
-        Bukkit.getOnlinePlayers().parallelStream()
+        Bukkit.getOnlinePlayers().stream()
                                  .map(Player::getUniqueId)
                                  .map(DonorPlayer::getDonorPlayer)
                                  .forEach(DonorPlayer::saveDonor);

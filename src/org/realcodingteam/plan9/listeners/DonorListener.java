@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryHolder;
@@ -20,6 +21,7 @@ import org.realcodingteam.plan9.inv.AbstractMenu;
 import org.realcodingteam.plan9.inv.MiscMenu;
 import org.realcodingteam.plan9.inv.SlotsMenu;
 import org.realcodingteam.plan9.objects.DonorPlayer;
+import org.realcodingteam.plan9.objects.effects.ExpEffects;
 import org.realcodingteam.plan9.objects.effects.OreEffects;
 
 public class DonorListener implements Listener {
@@ -63,10 +65,11 @@ public class DonorListener implements Listener {
         if(holder instanceof AbstractMenu) ((AbstractMenu)holder).close((Player)event.getPlayer());
     }
 
-    //Triple ore drops (See OreEffects)
+    //Double ore drops (See OreEffects)
+    //Fortune does increase drops by a random amount
     @EventHandler
     public void onMineOre(BlockBreakEvent event) {
-        if(!OreEffects.isTripleSmelt()) return;
+        if(!OreEffects.isDoubleSmelt()) return;
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
         
         ItemStack pick = event.getPlayer().getInventory().getItemInMainHand();
@@ -79,6 +82,12 @@ public class DonorListener implements Listener {
 
             event.setDropItems(false);
         }
+    }
+    
+    //Double experience drops (See ExpEffects)
+    @EventHandler
+    public void onExperienceGained(PlayerExpChangeEvent event) {
+        if(ExpEffects.isDoubleExp()) event.setAmount(event.getAmount() * 2);
     }
 
     @EventHandler

@@ -47,7 +47,7 @@ public final class SlotsMenu extends AbstractMenu {
     private final DonorPlayer dp; //The DonorPlayer wrapper for the viewer
     
     private SlotsMenu(Player viewer) {
-        super(36, "§5Donor - Slots", viewer, false);
+        super(36, "§5Donor - Slots", viewer, null);
         dp = DonorPlayer.getDonorPlayer(viewer.getUniqueId());
         
         build();

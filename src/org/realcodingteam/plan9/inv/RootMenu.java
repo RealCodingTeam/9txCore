@@ -1,15 +1,27 @@
 package org.realcodingteam.plan9.inv;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-
 public final class RootMenu extends AbstractMenu {
+    
+    private static final Map<Material, Consumer<Player>> children = new HashMap<>();
+    static {
+        children.put(Material.EXPERIENCE_BOTTLE, ExpMenu::new);
+        children.put(Material.BREWING_STAND, PotionsMenu::new);
+        children.put(Material.WHITE_WOOL, NickMenu::new);
+        children.put(Material.GOLD_ORE, OresMenu::new);
+        children.put(Material.COOKIE, MiscMenu::new);
+    }
 
     public RootMenu(Player viewer) {
-        super(27, ChatColor.DARK_PURPLE + "Donor", viewer, false);
+        super(27, ChatColor.DARK_PURPLE + "Donor", viewer, null);
         
         build();
         open(viewer);
@@ -26,11 +38,7 @@ public final class RootMenu extends AbstractMenu {
 
     @Override
     public void onInventoryClick(ItemStack item) {
-        
-        if(item.getType() == Material.WHITE_WOOL) new NickMenu(viewer);
-        else if(item.getType() == Material.EXPERIENCE_BOTTLE) new ExpMenu(viewer);
-        else if(item.getType() == Material.GOLD_ORE) new OresMenu(viewer);
-        else if(item.getType() == Material.BREWING_STAND) new PotionsMenu(viewer);
-        else if(item.getType() == Material.COOKIE) new MiscMenu(viewer);
+        if(!children.containsKey(item.getType())) return;
+        children.get(item.getType()).accept(viewer);
     }
 }

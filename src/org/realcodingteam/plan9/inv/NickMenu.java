@@ -17,7 +17,7 @@ public class NickMenu extends AbstractMenu {
     int taskid = -1;
     
     public NickMenu(Player viewer) {
-        super(18, ChatColor.DARK_PURPLE + "Donor - Nick", viewer, true);
+        super(18, ChatColor.DARK_PURPLE + "Donor - Nick", viewer, RootMenu::new);
         
         build();
         open(viewer);

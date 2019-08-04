@@ -8,14 +8,14 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 @SuppressWarnings({"deprecation", "unused"}) //java is dumb and thinks all effects except DAY are unused
-public class MiscEffects extends Effects {
+public final class MiscEffects extends Effects {
     
     private static final Map<Material, MiscEffects> effects = new HashMap<>();
     
     private static final MiscEffects FEED = new MiscEffects(5, Material.COOKIE, MiscEffects::feedAll);
     private static final MiscEffects HEAL = new MiscEffects(15, Material.GOLDEN_APPLE, MiscEffects::healAll);
     private static final MiscEffects SUNNY = new MiscEffects(10, Material.BUCKET, MiscEffects::clearWeather);
-    private static final MiscEffects STORMY = new MiscEffects(100, Material.WATER_BUCKET, MiscEffects::stormyWeather);
+    private static final MiscEffects STORMY = new MiscEffects(75, Material.WATER_BUCKET, MiscEffects::stormyWeather);
     private static final MiscEffects DAY = new MiscEffects(10, Material.SUNFLOWER, MiscEffects::dayTime);
     private static final MiscEffects NIGHT = new MiscEffects(100, Material.CLOCK, MiscEffects::nightTime);
     
@@ -30,8 +30,6 @@ public class MiscEffects extends Effects {
         return effects.getOrDefault(item.getType(), DAY);
     }
     
-    
-
     private static void feedAll() {
         Bukkit.getOnlinePlayers().forEach(p -> {
             p.setSaturation(20.0f);
@@ -40,7 +38,10 @@ public class MiscEffects extends Effects {
     }
     
     private static void healAll() {
-        Bukkit.getOnlinePlayers().forEach(p -> p.setHealth(p.getMaxHealth()));
+        Bukkit.getOnlinePlayers()
+            .stream()
+            .filter(p -> !p.isDead())
+            .forEach(p -> p.setHealth(p.getMaxHealth()));
     }
     
     private static void clearWeather() {

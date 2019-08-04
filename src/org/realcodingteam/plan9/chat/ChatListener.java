@@ -30,6 +30,8 @@ public final class ChatListener implements Listener {
     
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent event) {
+        if(!event.getMessage().contains("<") || !event.getMessage().contains(">")) return;
+        
         //Intial checks to make sure the player should be able to use this
         if(!event.getPlayer().hasPermission("ntx.item")) return;
         Player player = event.getPlayer();
@@ -71,8 +73,12 @@ public final class ChatListener implements Listener {
         
         if(items.isEmpty()) return; //If no item tags were found, return
         event.setCancelled(true);
-        Bukkit.getOnlinePlayers().forEach(p -> p.spigot().sendMessage(base));
-        Bukkit.getConsoleSender().sendMessage("[9txCore Item Chat] <CHAT>: " + event.getPlayer().getDisplayName() + ": " + event.getMessage());
+        Bukkit.getOnlinePlayers().stream()
+                                 .filter(p -> !ess.getUser(p).isIgnoredPlayer(user))
+                                 .forEach(p -> {
+                                     p.spigot().sendMessage(base);
+                                 });
+        Bukkit.getConsoleSender().sendMessage(ChatColor.YELLOW + "[9txCore Item Chat]" + ChatColor.WHITE + " <CHAT>: " + event.getPlayer().getDisplayName() + ": " + event.getMessage());
     }
     
     //Converts a char into <Integer, ItemStack> pair.

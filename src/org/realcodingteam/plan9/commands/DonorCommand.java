@@ -29,6 +29,21 @@ import org.realcodingteam.plan9.inv.RootMenu;
 public class DonorCommand implements CommandExecutor, TabCompleter {
 
     private static Map<String, BiConsumer<CommandSender, String[]>> subcommands;
+    static {
+        subcommands = new HashMap<>();
+        subcommands.put("xp",     (sender, args) -> menu(sender, ExpMenu::new));
+        subcommands.put("ores",   (sender, args) -> menu(sender, OresMenu::new));
+        subcommands.put("potion", (sender, args) -> menu(sender, PotionsMenu::new));
+        subcommands.put("nick",   (sender, args) -> menu(sender, NickMenu::new));
+        subcommands.put("misc",   (sender, args) -> menu(sender, MiscMenu::new));
+        
+        subcommands.put("help", new DonorHelp()::run);
+        subcommands.put("pay",  new DonorPay()::run);
+        subcommands.put("send", new DonorPay()::run);
+        subcommands.put("view", new DonorView()::run);
+        subcommands.put("add",  new DonorAddSet()::run);
+        subcommands.put("set",  new DonorAddSet()::run);
+    }
 
     public static int getNumberOfSubCommands() {
         return subcommands.size();
@@ -38,25 +53,7 @@ public class DonorCommand implements CommandExecutor, TabCompleter {
         return subcommands.keySet();
     }
     
-    public DonorCommand() {
-        if(subcommands == null) {
-            subcommands = new HashMap<>();
-            subcommands.put("xp",     (sender, args) -> menu(sender, ExpMenu::new));
-            subcommands.put("ores",   (sender, args) -> menu(sender, OresMenu::new));
-            subcommands.put("potion", (sender, args) -> menu(sender, PotionsMenu::new));
-            subcommands.put("nick",   (sender, args) -> menu(sender, NickMenu::new));
-            subcommands.put("misc",   (sender, args) -> menu(sender, MiscMenu::new));
-            
-            subcommands.put("help", new DonorHelp()::run);
-            subcommands.put("pay",  new DonorPay()::run);
-            subcommands.put("send", new DonorPay()::run);
-            subcommands.put("view", new DonorView()::run);
-            subcommands.put("add",  new DonorAddSet()::run);
-            subcommands.put("set",  new DonorAddSet()::run);
-        }
-    }
-    
-    private void menu(CommandSender sender, Function<Player, AbstractMenu> type) {
+    private static void menu(CommandSender sender, Function<Player, AbstractMenu> type) {
         if(SubDonorCommand.stopConsole(sender)) return;
         type.apply((Player)sender);
     }

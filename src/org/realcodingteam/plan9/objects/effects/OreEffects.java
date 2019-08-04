@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.realcodingteam.plan9.NtxPlugin;
 
 //See Effects
-public class OreEffects extends Effects {
+public final class OreEffects extends Effects {
     
     private static final Map<Material, Material> ORE_TO_RESOURCE;
     static {
@@ -27,42 +27,42 @@ public class OreEffects extends Effects {
     }
     
     private static int taskId = -1;
-    private static long TRIPLE_ORE_TIME = Instant.now().toEpochMilli();
+    private static long DOUBLE_ORE_TIME = Instant.now().toEpochMilli();
     
     public static final OreEffects TIER_1 = new OreEffects(50, 60_000L);
     public static final OreEffects TIER_2 = new OreEffects(100, 120_000L);
-    public static final OreEffects TIER_3 = new OreEffects(200, 240_000L);
+    public static final OreEffects TIER_3 = new OreEffects(175, 240_000L);
     
     protected OreEffects(int cost, long duration) {
         super(cost);
         
         effect = () -> {
-            if(TRIPLE_ORE_TIME < Instant.now().toEpochMilli()) {
-                TRIPLE_ORE_TIME = Instant.now().toEpochMilli();
+            if(DOUBLE_ORE_TIME < Instant.now().toEpochMilli()) {
+                DOUBLE_ORE_TIME = Instant.now().toEpochMilli();
             }
             
-            TRIPLE_ORE_TIME += duration;
+            DOUBLE_ORE_TIME += duration;
             
             if(taskId != -1) Bukkit.getScheduler().cancelTask(taskId);
             taskId = Bukkit.getScheduler().runTaskLater(NtxPlugin.getInstance(), () -> {
-                if(((TRIPLE_ORE_TIME - Instant.now().toEpochMilli()) / 1000) <= 3) {
-                    Bukkit.broadcastMessage("§e[DONOR] §cTriple ore drops have expired.");
+                if(((DOUBLE_ORE_TIME - Instant.now().toEpochMilli()) / 1000) <= 3) {
+                    Bukkit.broadcastMessage("§e[DONOR] §cDouble ore drops have expired.");
                     Bukkit.getScheduler().cancelTask(taskId);
                     taskId = -1;
                 }
-            }, ((TRIPLE_ORE_TIME - Instant.now().toEpochMilli()) / 1000) * 20 + 20).getTaskId();
+            }, ((DOUBLE_ORE_TIME - Instant.now().toEpochMilli()) / 1000) * 20 + 20).getTaskId();
         };
     }
     
-    public static boolean isTripleSmelt() {
-        return TRIPLE_ORE_TIME > Instant.now().toEpochMilli();
+    public static boolean isDoubleSmelt() {
+        return DOUBLE_ORE_TIME > Instant.now().toEpochMilli();
     }
     
     public static ItemStack smelt(ItemStack in, boolean fortune) {
         in.setType(ORE_TO_RESOURCE.getOrDefault(in.getType(), in.getType()));
         
-        int amount = in.getAmount() * 3;
-        if(fortune) amount = (int) Math.floor(amount * 1.8d);
+        int amount = in.getAmount() * 2;
+        if(fortune) amount = (int) Math.floor(amount * (Math.random() + 2));
         in.setAmount(amount);
         
         return in;

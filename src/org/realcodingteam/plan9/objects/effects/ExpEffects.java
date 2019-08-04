@@ -1,18 +1,43 @@
 package org.realcodingteam.plan9.objects.effects;
 
+import java.time.Instant;
+
 import org.bukkit.Bukkit;
+import org.realcodingteam.plan9.NtxPlugin;
 
 //See Effects
 public final class ExpEffects extends Effects {
 
-    public static final ExpEffects TIER_1 = new ExpEffects(15, 160);
-    public static final ExpEffects TIER_2 = new ExpEffects(30, 550);
-    public static final ExpEffects TIER_3 = new ExpEffects(50, 1395);
+    public static final ExpEffects TIER_1 = new ExpEffects(15, 60_000L);
+    public static final ExpEffects TIER_2 = new ExpEffects(30, 120_000L);
+    public static final ExpEffects TIER_3 = new ExpEffects(50, 180_000L);
     
-    protected ExpEffects(int cost, int xp) {
+    private static int taskId = -1;
+    private static long DOUBLE_EXP_TIME = Instant.now().toEpochMilli();
+    
+    protected ExpEffects(int cost, long duration) {
         super(cost);
         
-        effect = () -> Bukkit.getOnlinePlayers().forEach(p -> p.giveExp(xp));
+        effect = () -> {
+            if(DOUBLE_EXP_TIME < Instant.now().toEpochMilli()) {
+                DOUBLE_EXP_TIME = Instant.now().toEpochMilli();
+            }
+            
+            DOUBLE_EXP_TIME += duration;
+            
+            if(taskId != -1) Bukkit.getScheduler().cancelTask(taskId);
+            taskId = Bukkit.getScheduler().runTaskLater(NtxPlugin.getInstance(), () -> {
+                if(((DOUBLE_EXP_TIME - Instant.now().toEpochMilli()) / 1000) <= 3) {
+                    Bukkit.broadcastMessage("§e[DONOR] §cDouble experience drops has expired.");
+                    Bukkit.getScheduler().cancelTask(taskId);
+                    taskId = -1;
+                }
+            }, ((DOUBLE_EXP_TIME - Instant.now().toEpochMilli()) / 1000) * 20 + 20).getTaskId();
+        };
+    }
+    
+    public static boolean isDoubleExp() {
+        return DOUBLE_EXP_TIME > Instant.now().toEpochMilli();
     }
     
     public static ExpEffects fromAmount(int i) {

@@ -16,7 +16,7 @@ public final class MultiColorNickMenu extends AbstractMenu {
     private Deque<String> letters = new ArrayDeque<String>();
     
     public MultiColorNickMenu(Player viewer) {
-        super(27, "§5Pick your name colors", viewer, false);
+        super(27, "§5Pick your name colors", viewer, NickMenu::new);
         
         build();
     }
@@ -28,7 +28,7 @@ public final class MultiColorNickMenu extends AbstractMenu {
             inv.setItem(19, makeItem(Material.RED_STAINED_GLASS_PANE, "§cDelete last letter"));
         }
         
-        inv.setItem(inv.getSize() - 1, makeItem(Material.PAPER, "§eName: §r" + asString(letters)));
+        inv.setItem(inv.getSize() - 2, makeItem(Material.PAPER, "§eName: §r" + asString(letters)));
         
         if(index < viewer.getName().length()) {
             inv.setItem(0,  makeItem(Material.BLACK_WOOL,        "Add §0Black"));

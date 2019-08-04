@@ -10,7 +10,7 @@ import org.realcodingteam.plan9.objects.effects.MiscEffects;
 public class MiscMenu extends AbstractMenu {
     
     public MiscMenu(Player viewer) {
-        super(9, ChatColor.DARK_PURPLE + "Donor - Misc", viewer, true);
+        super(9, ChatColor.DARK_PURPLE + "Donor - Misc", viewer, RootMenu::new);
         
         build();
         open(viewer);
@@ -39,6 +39,6 @@ public class MiscMenu extends AbstractMenu {
     
     private static ItemStack getWeatherItem() {
         if(Bukkit.getWorld("world").hasStorm()) return makeItem(Material.BUCKET, "§5Set Weather To Clear - 10 DP", "§aClear weather");
-        return makeItem(Material.WATER_BUCKET, "§5Set Weather To Stormy - 100 DP", "§aThunderstorm");
+        return makeItem(Material.WATER_BUCKET, "§5Set Weather To Stormy - 75 DP", "§aThunderstorm");
     }
 }
