@@ -1,5 +1,7 @@
 package org.realcodingteam.plan9.inv;
 
+import static org.realcodingteam.plan9.util.Item.makeItem;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -40,5 +42,10 @@ public final class RootMenu extends AbstractMenu {
     public void onInventoryClick(ItemStack item) {
         if(!children.containsKey(item.getType())) return;
         children.get(item.getType()).accept(viewer);
+    }
+
+    @Override
+    public boolean needsRefresh() {
+        return false;
     }
 }

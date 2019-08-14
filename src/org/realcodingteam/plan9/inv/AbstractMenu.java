@@ -1,8 +1,11 @@
 package org.realcodingteam.plan9.inv;
 
+import static org.realcodingteam.plan9.util.Item.makeItem;
+
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import org.bukkit.Bukkit;
@@ -12,35 +15,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.realcodingteam.plan9.objects.DonorPlayer;
+import org.realcodingteam.plan9.data.DonorPlayer;
 
 public abstract class AbstractMenu implements InventoryHolder {
 
-    protected static final List<Player> open_invs = new ArrayList<>();
+    protected static final Map<Player, AbstractMenu> open_invs = new HashMap<>();
     
     public static final void closeOpenInvs() {
-        open_invs.forEach(Player::closeInventory);
+        open_invs.keySet().forEach(Player::closeInventory);
         open_invs.clear();
     }
     
-    public static final ItemStack makeItem(Material mat, String name, String... lore) {
-        return makeItem(mat, 1, name, lore);
-    }
-    
-    public static final ItemStack makeItem(Material mat, int amount, String name, String... lore) {
-        ItemStack is = new ItemStack(mat, amount);
-        ItemMeta im = is.getItemMeta();
-        im.setDisplayName(name);
-        if(lore != null && lore.length > 0) im.setLore(Arrays.asList(lore));
-        is.setItemMeta(im);
-        return is;
-    }
-    
-    public static final String getLore(ItemStack item) {
-        ItemMeta im = item.getItemMeta();
-        if(im.hasLore()) return im.getLore().get(0);
-        return ChatColor.RED + "###ERROR###: " + im.getDisplayName();
+    public static void triggerRefresh() {
+        open_invs.values().stream().filter(AbstractMenu::needsRefresh).forEach(AbstractMenu::build);
     }
     
     protected Inventory inv;
@@ -57,13 +44,18 @@ public abstract class AbstractMenu implements InventoryHolder {
         viewer.closeInventory();
     }
     
+    public abstract boolean needsRefresh();
+    
     public final void open(Player p) {
-        open_invs.add(p);
+        open_invs.put(p, this);
         p.openInventory(inv);
     }
     
     public void close(Player p) {
-        open_invs.removeIf(p2 -> p2.getUniqueId().equals(p.getUniqueId()));
+        open_invs.entrySet().removeIf(entry -> {
+            Player player = entry.getKey();
+            return player.getUniqueId().equals(p.getUniqueId());
+        });
     }
     
     protected void setDonorSlot(Player player, int slot) {

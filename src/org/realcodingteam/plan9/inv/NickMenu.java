@@ -1,20 +1,17 @@
 package org.realcodingteam.plan9.inv;
 
+import static org.realcodingteam.plan9.util.Item.makeItem;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.realcodingteam.plan9.NtxPlugin;
-import org.realcodingteam.plan9.objects.DonorPlayer;
-import org.realcodingteam.plan9.objects.RainbowWool;
+import org.realcodingteam.plan9.data.DonorPlayer;
 
 public class NickMenu extends AbstractMenu {
-
-    int taskid = -1;
     
     public NickMenu(Player viewer) {
         super(18, ChatColor.DARK_PURPLE + "Donor - Nick", viewer, RootMenu::new);
@@ -43,9 +40,7 @@ public class NickMenu extends AbstractMenu {
         inv.setItem(15, makeItem(Material.WHITE_WOOL,        "§fWhite §fname"));
         
         if(viewer.hasPermission("ntx.end")) {
-            taskid = Bukkit.getScheduler().scheduleSyncRepeatingTask(NtxPlugin.getInstance(), () -> {
-                inv.setItem(16, RainbowWool.instance.getWool());
-            }, 0L, 10L);
+            inv.setItem(16, RainbowWool.getWool());
         } else {
             inv.setItem(16, makeItem(Material.BEDROCK, "§4§nDonate for§9§l End §4§nto access multi-colored names!"));
         }
@@ -99,10 +94,9 @@ public class NickMenu extends AbstractMenu {
         DonorPlayer.getDonorPlayer(viewer.getUniqueId()).setNick("" + color.getChar());
         viewer.sendMessage(ChatColor.YELLOW + "You set your name to: " + viewer.getDisplayName());
     }
-    
+
     @Override
-    public void close(Player p) {
-        open_invs.removeIf(p2 -> p2.getUniqueId().equals(p.getUniqueId()));
-        Bukkit.getScheduler().cancelTask(taskid);
+    public boolean needsRefresh() {
+        return true;
     }
 }

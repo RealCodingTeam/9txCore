@@ -6,20 +6,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.realcodingteam.plan9.chat.ChatListener;
 import org.realcodingteam.plan9.commands.DonorCommand;
 import org.realcodingteam.plan9.commands.StaffChatCommand;
+import org.realcodingteam.plan9.data.DonorPlayer;
 import org.realcodingteam.plan9.inv.AbstractMenu;
 import org.realcodingteam.plan9.inv.SlotsMenu;
-import org.realcodingteam.plan9.listeners.BookOverloadListener;
 import org.realcodingteam.plan9.listeners.DonorListener;
 import org.realcodingteam.plan9.listeners.DrownedDupeListener;
 import org.realcodingteam.plan9.listeners.NtxNerfListener;
-import org.realcodingteam.plan9.objects.BookProtocolBlocker;
-import org.realcodingteam.plan9.objects.DonorPlayer;
+import org.realcodingteam.plan9.prank.Manager;
 
 public class NtxPlugin extends JavaPlugin {
     
     private static NtxPlugin instance;
     
-    public static NtxPlugin getInstance() {
+    public static NtxPlugin instance() {
         return instance;
     }
     
@@ -33,25 +32,26 @@ public class NtxPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new NtxNerfListener(), this);      //Disables normal vanilla functionality
         getServer().getPluginManager().registerEvents(new DonorListener(), this);        //Triple ore effect and /donor menu clicking
         getServer().getPluginManager().registerEvents(new DrownedDupeListener(), this);  //Prevents the zombie conversion dupe
-        getServer().getPluginManager().registerEvents(new BookOverloadListener(), this); //Prevents the written book chunk overload dupe
         //register commands
         getCommand("donor").setExecutor(new DonorCommand());
         getCommand("donor").setTabCompleter(new DonorCommand());
-        
         getCommand("staff").setExecutor(new StaffChatCommand());
         
-        enableBookChecker(); //ProtocolLib required written book chunk overload dupe prevention
         enableItemChat();    //Displaying items in chat, requires Essentials to work to prevent mute bypass
+        
+        Manager.setup();
+        
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> AbstractMenu.triggerRefresh(), 10L, 10L);
+        SlotsMenu.save();
     }
     
     @Override
     public void onDisable() {
-        //save all donor players
-        Bukkit.getOnlinePlayers().stream()
-                                 .map(Player::getUniqueId)
-                                 .map(DonorPlayer::getDonorPlayer)
-                                 .forEach(DonorPlayer::saveDonor);
         AbstractMenu.closeOpenInvs();
+        Bukkit.getOnlinePlayers().stream()
+            .map(Player::getUniqueId)
+            .map(DonorPlayer::getDonorPlayer)
+            .forEach(DonorPlayer::saveDonor);
         SlotsMenu.save();
     }
     
@@ -67,26 +67,9 @@ public class NtxPlugin extends JavaPlugin {
     }
     
     private void loadDonors() {
+        DonorPlayer.onEnable();
         //Grants donor points every 15 minutes
         DonorPlayer.runDonorTask();
-        //This only has an effect when the server is reloaded.
-        //Ensures every player is loaded as a DonorPlayer
-        Bukkit.getOnlinePlayers().parallelStream().map(Player::getUniqueId).forEach(DonorPlayer::loadDonor);
-    }
-    
-    private void enableBookChecker() {
-        /*
-         * This version of the book dupe mitigation required ProtocolLib because
-         * it listens for PacketPlayCustomPayload with ID "MC|BSign". 
-         * If ProtocolLib is not on the server, this plugin can only use the
-         * event-based prevention. See BookOverloadListener.
-         */
-        if(getServer().getPluginManager().getPlugin("ProtocolLib") == null) { 
-            getLogger().warning("ProtocolLib is missing. Can't check for book dupes without it.");
-            return;
-        }
-        
-        BookProtocolBlocker.start();
     }
     
     private void enableItemChat() {
@@ -98,7 +81,7 @@ public class NtxPlugin extends JavaPlugin {
          * the text components for each item the player is displaying.
          */
         if(getServer().getPluginManager().getPlugin("Essentials") == null) {
-            getLogger().warning("Essentials is missing. Can't do [item] chat without it.");
+            getLogger().warning("Essentials is missing. Can't do <item> chat without it.");
             return;
         }
         

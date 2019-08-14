@@ -6,15 +6,14 @@ import java.util.stream.IntStream;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.realcodingteam.plan9.NtxPlugin;
-import org.realcodingteam.plan9.objects.DonorPlayer;
+import org.realcodingteam.plan9.data.DonorPlayer;
+import org.realcodingteam.plan9.util.Item;
 
+//TODO: Clean this class up, it's disgusting
 public final class SlotsMenu extends AbstractMenu {
     
     private static int loc = 0; //internal
@@ -39,8 +38,8 @@ public final class SlotsMenu extends AbstractMenu {
                           })
                           .toArray(Material[]::new);
         
-        if(!NtxPlugin.getInstance().getConfig().contains("jackpot")) save();
-        jackpot = NtxPlugin.getInstance().getConfig().getDouble("jackpot");
+        if(!NtxPlugin.instance().getConfig().contains("jackpot")) save();
+        jackpot = NtxPlugin.instance().getConfig().getDouble("jackpot");
     }
     
     private boolean running = false; //Used to track a running game
@@ -91,7 +90,7 @@ public final class SlotsMenu extends AbstractMenu {
         
         for(int i = ROLL_ANIMATION_AMOUNT; i > 0; i--) {
             final int index = i;
-            Bukkit.getScheduler().scheduleSyncDelayedTask(NtxPlugin.getInstance(), () -> {
+            Bukkit.getScheduler().scheduleSyncDelayedTask(NtxPlugin.instance(), () -> {
                 build();
                 viewer.playSound(viewer.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, .2f, .2f * (index % 5 + 1));
                 if(index >= ROLL_ANIMATION_AMOUNT) {
@@ -152,7 +151,7 @@ public final class SlotsMenu extends AbstractMenu {
         ItemStack[] gen = new ItemStack[3];
         for(int i = 0; i < gen.length; i++) {
             Material mat = MATERIALS[(int) Math.floor(Math.random() * MATERIALS.length)];
-            gen[i] = makeItem(mat, " ");
+            gen[i] = Item.makeItem(mat, " ");
         }
         
         return gen;
@@ -160,7 +159,7 @@ public final class SlotsMenu extends AbstractMenu {
     
     //Sets the bottom row of the inventory
     private void drawBottom() {
-        ItemStack START_BUTTON = makeItem(
+        ItemStack START_BUTTON = Item.makeItem(
                 Material.LIME_STAINED_GLASS_PANE, 
                 "§aStart!", 
                 "§eClick me to start playing!", 
@@ -172,7 +171,7 @@ public final class SlotsMenu extends AbstractMenu {
         );
         
         //if not running, place the start button. otherwise, place an "in progress" item
-        ItemStack is = !running? START_BUTTON : makeItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "§9Good luck!", "", "§eThe current jackpot is §d" + (int)jackpot + " DP§e!");
+        ItemStack is = !running? START_BUTTON : Item.makeItem(Material.LIGHT_BLUE_STAINED_GLASS_PANE, "§9Good luck!", "", "§eThe current jackpot is §d" + (int)jackpot + " DP§e!");
         
         IntStream.range(inv.getSize() - 9, inv.getSize()).forEach(i -> inv.setItem(i, is));
         setDonorSlot(viewer, inv.getSize() - 5); //gold ingot with donor player's information
@@ -183,8 +182,8 @@ public final class SlotsMenu extends AbstractMenu {
         double toSave = JACKPOT_START;
         if(jackpot != 0) toSave = jackpot; //unitialized jackpot value is 0 
         
-        NtxPlugin.getInstance().getConfig().set("jackpot", toSave);
-        NtxPlugin.getInstance().saveConfig();
+        NtxPlugin.instance().getConfig().set("jackpot", toSave);
+        NtxPlugin.instance().saveConfig();
     }
     
     //give the winning items a cool effect and name
@@ -192,12 +191,8 @@ public final class SlotsMenu extends AbstractMenu {
         for(int i = 0; i < inv.getSize() - 9; i++) {
             ItemStack is = inv.getItem(i);
             
-            if(i % 2 == 0) is.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
-            
-            ItemMeta im = is.getItemMeta();
-            im.setDisplayName("§6Winner!");
-            im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-            is.setItemMeta(im);
+            if(i % 2 == 0) is = Item.addEnchantGlow(is);
+            is = Item.setDisplayName(is, "§6Winner!");
         }
     }
     
@@ -209,5 +204,10 @@ public final class SlotsMenu extends AbstractMenu {
         if(!event.getClick().isShiftClick() || event.getSlot() != loc) return false;
         new SlotsMenu((Player)event.getWhoClicked());
         return true;
+    }
+
+    @Override
+    public boolean needsRefresh() {
+        return false;
     }
 }

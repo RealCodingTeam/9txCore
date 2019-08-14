@@ -21,7 +21,7 @@ public class StaffChatCommand implements CommandExecutor, Listener {
     private static final String FORMAT = "§3Staff §8>> §9%s§8: §f%s";
     
     public StaffChatCommand() {
-        Bukkit.getPluginManager().registerEvents(this, NtxPlugin.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, NtxPlugin.instance());
     }
     
     private static String getOnlineStaff() {

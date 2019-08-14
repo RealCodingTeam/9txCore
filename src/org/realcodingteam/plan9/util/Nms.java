@@ -1,4 +1,4 @@
-package org.realcodingteam.plan9.magic;
+package org.realcodingteam.plan9.util;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -40,7 +40,7 @@ public final class Nms {
         } catch(Exception e) {
             e.printStackTrace();
             failed = true;
-            NtxPlugin.getInstance().getLogger().warning("Failed to setup NMS reflection. Item tags in chat will not work.");
+            NtxPlugin.instance().getLogger().warning("Failed to setup NMS reflection. Item tags in chat will not work.");
         }
     }
     

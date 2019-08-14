@@ -25,13 +25,8 @@ import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
-import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryPickupItemEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -51,19 +46,24 @@ public class NtxNerfListener implements Listener {
     private Map<Player, Long> pearls = new HashMap<>(); //Contains a list of players on pearl cooldown. <Player, Time>
     
     @EventHandler
-    public void onEntityEffectEvent(EntityPotionEffectEvent event) {
-        //Disables the Dolphin's Grace effect:
-        //Dolphin's grace and depth strider is incredibly OP for vanilla survival.
-        if(event.getCause() == Cause.DOLPHIN) {
-            event.setCancelled(true);
+    public void onEntityEffect(EntityPotionEffectEvent event) {
+        if(!(event.getEntity() instanceof Player)) return;
         
-            if(event.getEntity() instanceof Player) {
-                Player p = (Player) event.getEntity();
-                p.removePotionEffect(PotionEffectType.DOLPHINS_GRACE);
-            }
+        switch(event.getCause()) {
+            case DOLPHIN:
+                event.setCancelled(true);
+                break;
+            case AREA_EFFECT_CLOUD:
+            case POTION_SPLASH:
+                if(event.getNewEffect().getType() == PotionEffectType.WEAKNESS) {
+                    event.setCancelled(true);
+                    return;
+                }
+                //fallthrough
+            default:
+                break;
         }
     }
-    
     
     @EventHandler
     public void onAnvilThing(PrepareAnvilEvent event) {
@@ -113,10 +113,9 @@ public class NtxNerfListener implements Listener {
         if(event.getItem().getType() == Material.POTION || event.getItem().getType() == Material.SPLASH_POTION) {
             PotionMeta pm = (PotionMeta) event.getItem().getItemMeta();
             PotionType type = pm.getBasePotionData().getType();
-            if(type.equals(PotionType.INSTANT_DAMAGE)
-            || type.equals(PotionType.WEAKNESS)) { 
+            if(type.equals(PotionType.INSTANT_DAMAGE)) { 
                 event.setCancelled(true);
-                event.getPlayer().sendMessage("" + ChatColor.RED + ChatColor.BOLD + "This potion is disabled.");
+                event.getPlayer().sendMessage(ChatColor.RED + "This potion is disabled.");
             }
         }
     }
@@ -128,8 +127,7 @@ public class NtxNerfListener implements Listener {
             ThrownPotion tp = (ThrownPotion) event.getEntity();
             for(PotionEffect pe : tp.getEffects()) {
                 PotionEffectType type = pe.getType();
-                if(type.equals(PotionEffectType.HARM)
-                || type.equals(PotionEffectType.WEAKNESS)) {
+                if(type.equals(PotionEffectType.HARM)) {
                     event.setCancelled(true);
                     event.getEntity().remove();
                 }
@@ -144,8 +142,8 @@ public class NtxNerfListener implements Listener {
         Player player = (Player) event.getEntity().getShooter();
         if(pearls.containsKey(player)) {
             Instant now = Instant.now();
-            if(now.toEpochMilli() - pearls.get(player) < (NtxPlugin.getInstance().getConfig().getLong("pearlcooldown") * 1000)) {
-                long future = pearls.get(player) + (NtxPlugin.getInstance().getConfig().getLong("pearlcooldown") * 1000);
+            if(now.toEpochMilli() - pearls.get(player) < (NtxPlugin.instance().getConfig().getLong("pearlcooldown") * 1000)) {
+                long future = pearls.get(player) + (NtxPlugin.instance().getConfig().getLong("pearlcooldown") * 1000);
                 long delta = future - now.toEpochMilli();
                 double delay = Math.floor(delta / 100) / 10;
                 player.sendMessage("" + ChatColor.RED + ChatColor.BOLD + "You cannot use this for another " + delay + " seconds!");
@@ -153,13 +151,13 @@ public class NtxNerfListener implements Listener {
             }
         } else {
             pearls.put(player, Instant.now().toEpochMilli());
-            Bukkit.getScheduler().scheduleAsyncDelayedTask(NtxPlugin.getInstance(), new BukkitRunnable() {
+            Bukkit.getScheduler().scheduleAsyncDelayedTask(NtxPlugin.instance(), new BukkitRunnable() {
                 @Override
                 public void run() {
                     pearls.remove(player);
                 }
                 
-            }, 20 * NtxPlugin.getInstance().getConfig().getLong("pearlcooldown"));
+            }, 20 * NtxPlugin.instance().getConfig().getLong("pearlcooldown"));
         }
     }
     
@@ -184,7 +182,6 @@ public class NtxNerfListener implements Listener {
         }
     }
     
-    @EventHandler
     public void onPlayerMine(BlockBreakEvent event) {
         //Disable building on the nether roof unless the player is /op or has the permission "ntx.build"
         if(event.getPlayer().hasPermission("ntx.build")) return;
@@ -229,7 +226,8 @@ public class NtxNerfListener implements Listener {
             Material.BEDROCK, Material.BARRIER, Material.END_PORTAL_FRAME,
             Material.COMMAND_BLOCK, Material.REPEATING_COMMAND_BLOCK,
             Material.CHAIN_COMMAND_BLOCK, Material.COMMAND_BLOCK_MINECART,
-            Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID, Material.DEBUG_STICK
+            Material.STRUCTURE_BLOCK, Material.STRUCTURE_VOID, Material.DEBUG_STICK,
+            Material.JIGSAW
     );
     
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -238,13 +236,19 @@ public class NtxNerfListener implements Listener {
         boolean hasPerm = event.getEntityType() == EntityType.PLAYER && ((Player)event.getEntity()).isOp();
         
         Material type = event.getItem().getItemStack().getType();
-        if(DISABLED_MATERIALS.contains(type) && !hasPerm) event.setCancelled(true);
+        if(DISABLED_MATERIALS.contains(type) && !hasPerm) {
+            event.setCancelled(true);
+            event.getEntity().remove();
+        }
     }
     
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onHopperPickup(InventoryPickupItemEvent event) {
         //Don't let hoppers pick up "admin" blocks and items
         Material type = event.getItem().getItemStack().getType();
-        if(DISABLED_MATERIALS.contains(type)) event.setCancelled(true);
+        if(DISABLED_MATERIALS.contains(type)) {
+            event.setCancelled(true);
+            event.getItem().remove();
+        }
     }
 }

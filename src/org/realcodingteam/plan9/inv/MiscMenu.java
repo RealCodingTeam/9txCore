@@ -1,11 +1,14 @@
 package org.realcodingteam.plan9.inv;
 
+import static org.realcodingteam.plan9.util.Item.getLore;
+import static org.realcodingteam.plan9.util.Item.makeItem;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.realcodingteam.plan9.objects.effects.MiscEffects;
+import org.realcodingteam.plan9.inv.effects.MiscEffects;
 
 public class MiscMenu extends AbstractMenu {
     
@@ -40,5 +43,10 @@ public class MiscMenu extends AbstractMenu {
     private static ItemStack getWeatherItem() {
         if(Bukkit.getWorld("world").hasStorm()) return makeItem(Material.BUCKET, "§5Set Weather To Clear - 10 DP", "§aClear weather");
         return makeItem(Material.WATER_BUCKET, "§5Set Weather To Stormy - 75 DP", "§aThunderstorm");
+    }
+
+    @Override
+    public boolean needsRefresh() {
+        return true;
     }
 }

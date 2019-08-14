@@ -1,10 +1,13 @@
 package org.realcodingteam.plan9.inv;
 
+import static org.realcodingteam.plan9.util.Item.getLore;
+import static org.realcodingteam.plan9.util.Item.makeItem;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.realcodingteam.plan9.objects.effects.PotionsEffects;
+import org.realcodingteam.plan9.inv.effects.PotionsEffects;
 
 public class PotionsMenu extends AbstractMenu {
 
@@ -46,6 +49,11 @@ public class PotionsMenu extends AbstractMenu {
     @Override
     public void onInventoryClick(ItemStack item) {
         PotionsEffects.fromItem(item).buyAndRun(viewer, getLore(item));
+    }
+
+    @Override
+    public boolean needsRefresh() {
+        return false;
     }
     
 }

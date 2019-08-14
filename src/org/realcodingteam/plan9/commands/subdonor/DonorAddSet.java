@@ -1,7 +1,7 @@
 package org.realcodingteam.plan9.commands.subdonor;
 
 import org.bukkit.command.CommandSender;
-import org.realcodingteam.plan9.objects.DonorPlayer;
+import org.realcodingteam.plan9.data.DonorPlayer;
 
 import net.md_5.bungee.api.ChatColor;
 

@@ -1,5 +1,7 @@
 package org.realcodingteam.plan9.inv;
 
+import static org.realcodingteam.plan9.util.Item.makeItem;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -8,7 +10,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.realcodingteam.plan9.objects.DonorPlayer;
+import org.realcodingteam.plan9.data.DonorPlayer;
 
 public final class MultiColorNickMenu extends AbstractMenu {
 
@@ -51,6 +53,7 @@ public final class MultiColorNickMenu extends AbstractMenu {
             inv.setItem(18, makeItem(Material.LIME_STAINED_GLASS_PANE, "§aConfirm name: §r" + asString(letters)));
         }
         
+        setDonorSlot(viewer, inv.getSize() - 1);
         open(viewer);
     }
 
@@ -96,7 +99,15 @@ public final class MultiColorNickMenu extends AbstractMenu {
         build();
     }
     
-    private String asString(Deque<String> list) {
+    //Note: I made this method really generic just as an exercise for myself
+    //I understand that it's really "extra" to do this, especially since I use
+    //this method once and it's private.
+    private <E extends CharSequence> String asString(Iterable<E> list) {
         return String.join("", list);
+    }
+
+    @Override
+    public boolean needsRefresh() {
+        return false;
     }
 }

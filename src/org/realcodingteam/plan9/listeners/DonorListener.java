@@ -8,6 +8,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -17,12 +18,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
+import org.realcodingteam.plan9.data.DonorPlayer;
 import org.realcodingteam.plan9.inv.AbstractMenu;
 import org.realcodingteam.plan9.inv.MiscMenu;
 import org.realcodingteam.plan9.inv.SlotsMenu;
-import org.realcodingteam.plan9.objects.DonorPlayer;
-import org.realcodingteam.plan9.objects.effects.ExpEffects;
-import org.realcodingteam.plan9.objects.effects.OreEffects;
+import org.realcodingteam.plan9.inv.effects.ExpEffects;
+import org.realcodingteam.plan9.inv.effects.OreEffects;
 
 public class DonorListener implements Listener {
     
@@ -67,7 +68,7 @@ public class DonorListener implements Listener {
 
     //Double ore drops (See OreEffects)
     //Fortune does increase drops by a random amount
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onMineOre(BlockBreakEvent event) {
         if(!OreEffects.isDoubleSmelt()) return;
         if(event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
@@ -100,7 +101,7 @@ public class DonorListener implements Listener {
 
         //Grant one off donor bonus for donating for a rank
         if (player.hasPermission("ntx.donor")) {
-            DonorPlayer dp = DonorPlayer.loadDonor(player.getUniqueId());
+            DonorPlayer dp = DonorPlayer.getDonorPlayer(player.getUniqueId());
 
             if (!dp.hasReceivedDP()) {
                 int recieved = 0;
@@ -134,6 +135,8 @@ public class DonorListener implements Listener {
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         DonorPlayer.saveDonor(DonorPlayer.getDonorPlayer(event.getPlayer().getUniqueId()));
+        
+        
     }
 
     
