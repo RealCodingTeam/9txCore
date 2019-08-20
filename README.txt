@@ -1,11 +1,4 @@
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-NOTE: this plugin does not attempt to sanitize script paths at all. Directory navigation paths will work. 
-Do not run the server as root.
-Do not run the server as root.
-Do not run the server as root.
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-Scripting: Some menus' effects are entirely configurable.
+Scripting: Some menus effects are entirely configurable.
 Currently, two menus support scripting (Potions and Misc).
 
 To customize either of these menus, edit the YAML config files found in plugins/9txCore/menus/
@@ -18,6 +11,7 @@ items:
    sayHi:
       name: "\u00A76Say hello to everyone!"
       category: "Misc"
+      dynamic: true
       slot: 0
       cost: 0
       amount: 1
@@ -32,18 +26,13 @@ sayHi is dummy text, this can be whatever you'd like.
 Each effect requires the following keys:
   - name: The name to give the menu entry in game
   - category: Either "misc" or "potions"
+  - dynamic: Should the shouldShow function be called in order to dynamically show/hide this entry? this key is optional, and defaults to false.
   - slot: Where the item will be in the menu, 0 is the first slot
   - cost: How much the effect costs in DP (Donor Points)
   - amount: How many items are in the menu item stack
   - material: What material to use for the item in the menu
   - lore: Extra strings to add to the item in the menu. First line is used in broadcast.
   - script: path where the effect's script is located. Relative to plugins/9txCore/scripts/
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-NOTE: this plugin does not attempt to sanitize script paths at all. Directory navigation paths will work. 
-Do not run the server as root.
-Do not run the server as root.
-Do not run the server as root.
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Both the name and lore keys allow color codes using \u00A7 followed by the color code, i.e. "\u00A72Hello world" is dark green "Hello world".
 
@@ -68,6 +57,7 @@ function run() {
 }
 
 //optional, but useful if you want certain effects to be disabled at certain times
+//this function will only be called if the dynamic key in the menu entry is set to true.
 function shouldShow() {
 	//only show this effect in the menu if more than 1 player is online
 	return SERVER.getOnlinePlayers().size > 1;
@@ -83,5 +73,3 @@ Upcoming:
  * Bind the buyer of effects to a global variable BUYER
  * Add fields to menu configs to allow custom sizing and titles
  * Make main menu configurable to add user defined menus
-
-Ok enjoy, I sleep now, good night \o

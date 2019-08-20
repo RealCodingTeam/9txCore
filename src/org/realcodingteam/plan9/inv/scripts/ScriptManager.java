@@ -3,6 +3,7 @@ package org.realcodingteam.plan9.inv.scripts;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -21,10 +22,8 @@ public final class ScriptManager {
     private static final File ROOT = new File(NtxPlugin.instance().getDataFolder(), "scripts");
     
     public static void run(Player runner, MenuEntry entry) {
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("nashorn");
+        ScriptEngine engine = getEngine();
         
-        engine.put("SERVER", Bukkit.getServer());
         try {
             engine.eval(getScript(entry.getScript()));
             Invocable script = (Invocable) engine;
@@ -35,25 +34,28 @@ public final class ScriptManager {
             DonorPlayer dp = DonorPlayer.getDonorPlayer(runner.getUniqueId());
             dp.setDp(dp.getDp() + entry.getCost());
             
-            exception.printStackTrace();
-            
             if(exception instanceof ScriptException || exception instanceof FileNotFoundException) {
                 NtxPlugin.instance().getLogger().severe("The script for " + ChatColor.stripColor(entry.getName()) + " generated an exception: ");
                 NtxPlugin.instance().getLogger().severe(exception.getClass().getSimpleName() + ": " + exception.getMessage());
-            }
-            
-            if(exception instanceof NoSuchMethodException) {
+            } else if(exception instanceof NoSuchMethodException) {
                 NtxPlugin.instance().getLogger().severe("The script for " + ChatColor.stripColor(entry.getName()) + " has no run() function."); 
-                NtxPlugin.instance().getLogger().severe("Put the effect code inside the run function to fix this error."); 
+                NtxPlugin.instance().getLogger().severe("Put the effect code inside the run function to fix this error.");
+            } else if(exception instanceof ScriptSecurityException) {
+                NtxPlugin.instance().getLogger().severe("The script for " + ChatColor.stripColor(entry.getName()) + " attempted to violate security!");
+                NtxPlugin.instance().getLogger().severe("ScriptSecurityException: " + exception.getMessage());
+            } else {
+                exception.printStackTrace();
             }
         }
     }
     
     public static boolean shouldShow(MenuEntry entry) {
-        ScriptEngineManager manager = new ScriptEngineManager();
-        ScriptEngine engine = manager.getEngineByName("nashorn");
+        //The "isDynamic" flag is an optimization
+        //Speeds up menu building.
+        if(!entry.isDynamic()) return true;
         
-        engine.put("SERVER", Bukkit.getServer());
+        ScriptEngine engine = getEngine();
+        
         try {
             engine.eval(getScript(entry.getScript()));
             Invocable script = (Invocable) engine;
@@ -66,11 +68,44 @@ public final class ScriptManager {
         return true;
     }
     
-    private static FileReader getScript(String file) throws FileNotFoundException {
+    private static ScriptEngine getEngine() {
+        ClassLoader loader = NtxPlugin.instance().getClass().getClassLoader();
+        Thread.currentThread().setContextClassLoader(loader);
+        
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine engine = manager.getEngineByName("nashorn");
+        
+        engine.put("SERVER", Bukkit.getServer());
+        
+        return engine;
+    }
+    
+    private static FileReader getScript(String file) throws FileNotFoundException, ScriptSecurityException {
         if(!ROOT.exists()) ROOT.mkdir();
         if(!file.toLowerCase().endsWith(".js")) file = file + ".js";
+        File script = new File(ROOT, file);
         
-        FileReader reader = new FileReader(new File(ROOT, file));
+        try {
+            if(!script.getCanonicalPath().startsWith(ROOT.getAbsolutePath())) throw new ScriptSecurityException("Script patchs cannot be outside of the script root directory (" + ROOT.getAbsolutePath() + ")");
+        } catch (IOException e) {
+            NtxPlugin.instance().getLogger().warning("Could not check script path for " + file + ", MAKE SURE THE PATH IS CORRECT.");
+        }
+        
+        FileReader reader = new FileReader(script);
         return reader;
+    }
+    
+    @SuppressWarnings("serial")
+    private static class ScriptSecurityException extends Exception {
+        private final String msg;
+        
+        public ScriptSecurityException(String msg) {
+            this.msg = msg;
+        }
+        
+        @Override
+        public String getMessage() {
+            return msg;
+        }
     }
 }

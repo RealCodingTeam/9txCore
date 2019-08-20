@@ -15,8 +15,9 @@ public final class MenuEntry {
     private final int cost;
     private final int slot;
     private final String script;
+    private final boolean dynamic;
     
-    public MenuEntry(Menu category, String name, ItemStack item, int cost, int slot, String script) {
+    public MenuEntry(Menu category, String name, ItemStack item, int cost, int slot, String script, boolean dynamic) {
         category.addEntry(this);
         
         this.category = category;
@@ -25,6 +26,11 @@ public final class MenuEntry {
         this.cost = cost;
         this.slot = slot;
         this.script = script;
+        this.dynamic = dynamic;
+    }
+    
+    public boolean isDynamic() {
+        return dynamic;
     }
     
     public String getName() {
@@ -56,6 +62,7 @@ public final class MenuEntry {
         int slot = (Integer)args.get("slot");
         int cost = (Integer)args.get("cost");
         String script = (String)args.get("script");
+        boolean dynamic = (Boolean)args.getOrDefault("dynamic", false);
         
         String name = (String)args.get("name");
         Material material = Material.matchMaterial((String)args.get("material"));
@@ -64,7 +71,8 @@ public final class MenuEntry {
         int amount = (Integer)args.get("amount");
         ItemStack item = Item.makeItem(material, amount, name, lore.toArray(new String[0]));
         
-        return new MenuEntry(category, name, item, cost, slot, script);
+        
+        return new MenuEntry(category, name, item, cost, slot, script, dynamic);
         
     }
     
