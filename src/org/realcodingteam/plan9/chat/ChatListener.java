@@ -37,7 +37,6 @@ public final class ChatListener implements Listener {
         Player player = event.getPlayer();
 		User user = ess.getUser(player);
         if(user.isMuted() || user.isHidden()) return;
-        
         List<Integer> items = new ArrayList<>(); //Prevent players from sending the same item more than once
         TextComponent base = new TextComponent();
         base.addExtra(ItemTag.textComp("* ", ChatColor.DARK_PURPLE)); //Styled to look like /me

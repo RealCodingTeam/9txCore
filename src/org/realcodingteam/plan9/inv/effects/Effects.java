@@ -5,6 +5,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.realcodingteam.plan9.data.DonorPlayer;
 import org.realcodingteam.plan9.inv.AbstractMenu;
+import org.realcodingteam.plan9.inv.scripts.MenuEntry;
+import org.realcodingteam.plan9.inv.scripts.ScriptManager;
+import org.realcodingteam.plan9.util.Item;
 
 /*
  * This class and subclasses of this class are used to hard-code the
@@ -29,9 +32,13 @@ public abstract class Effects {
         return cost;
     }
     
+    private final static void announce(Player buyer, String display) {
+        Bukkit.broadcastMessage("§e[DONOR] §r" + buyer.getDisplayName() + "§d purchased §e" + display + "§d for the server!");
+    }
+    
     //Run the effect and broadcast to the server what was bought
     private final void run(Player buyer, String display) {
-        Bukkit.broadcastMessage("§e[DONOR] §r" + buyer.getDisplayName() + "§d purchased §e" + display + "§d for the server!");
+        announce(buyer, display);
         if(effect != null) effect.run();
         buyer.closeInventory();
     }
@@ -52,5 +59,19 @@ public abstract class Effects {
         
         buyer.sendMessage(ChatColor.RED + "You cannot afford this! You only have " + dp.getDp() + " DP, but need at least " + cost + "!");
         return;
+    }
+    
+    public static final void buyAndRun(Player buyer, MenuEntry effect) {
+        DonorPlayer dp = DonorPlayer.getDonorPlayer(buyer.getUniqueId());
+        int bal = dp.getDp() - effect.getCost();
+        
+        if(bal >= 0) {
+            dp.setDp(bal);
+            AbstractMenu.triggerRefresh();
+            announce(buyer, Item.getLore(effect.getItem()));
+            buyer.closeInventory();
+            ScriptManager.run(buyer, effect);
+            return;
+        }
     }
 }

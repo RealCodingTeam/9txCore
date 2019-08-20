@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.realcodingteam.plan9.chat.ChatListener;
 import org.realcodingteam.plan9.commands.DonorCommand;
+import org.realcodingteam.plan9.commands.ReloadCommand;
 import org.realcodingteam.plan9.commands.StaffChatCommand;
 import org.realcodingteam.plan9.data.DonorPlayer;
 import org.realcodingteam.plan9.inv.AbstractMenu;
@@ -12,7 +13,6 @@ import org.realcodingteam.plan9.inv.SlotsMenu;
 import org.realcodingteam.plan9.listeners.DonorListener;
 import org.realcodingteam.plan9.listeners.DrownedDupeListener;
 import org.realcodingteam.plan9.listeners.NtxNerfListener;
-import org.realcodingteam.plan9.prank.Manager;
 
 public class NtxPlugin extends JavaPlugin {
     
@@ -36,10 +36,9 @@ public class NtxPlugin extends JavaPlugin {
         getCommand("donor").setExecutor(new DonorCommand());
         getCommand("donor").setTabCompleter(new DonorCommand());
         getCommand("staff").setExecutor(new StaffChatCommand());
+        getCommand("reload").setExecutor(new ReloadCommand());
         
         enableItemChat();    //Displaying items in chat, requires Essentials to work to prevent mute bypass
-        
-        Manager.setup();
         
         Bukkit.getScheduler().scheduleSyncRepeatingTask(this, () -> AbstractMenu.triggerRefresh(), 10L, 10L);
         SlotsMenu.save();

@@ -24,6 +24,14 @@ public final class Item {
         return is;
     }
     
+    public static ItemStack setLore(ItemStack item, String... lore) {
+        ItemStack clone = item.clone();
+        ItemMeta im = clone.getItemMeta();
+        im.setLore(Arrays.asList(lore));
+        clone.setItemMeta(im);
+        return clone;
+    }
+    
     public static String getLore(ItemStack item) {
         ItemMeta im = item.getItemMeta();
         if(im.hasLore()) return im.getLore().get(0);

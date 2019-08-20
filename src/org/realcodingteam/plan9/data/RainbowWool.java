@@ -1,4 +1,4 @@
-package org.realcodingteam.plan9.inv;
+package org.realcodingteam.plan9.data;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

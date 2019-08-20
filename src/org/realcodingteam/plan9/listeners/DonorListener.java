@@ -125,6 +125,12 @@ public class DonorListener implements Listener {
             if(dp.getNick().length() > 1) nick = dp.getNick();
             else nick = ChatColor.getByChar(dp.getNick()) + player.getName() + ChatColor.RESET;
             
+            if(!ChatColor.stripColor(nick).equalsIgnoreCase(player.getName())) {
+                nick = player.getName();
+                player.sendMessage("" + ChatColor.YELLOW + ChatColor.BOLD + "[DONOR] " + ChatColor.YELLOW + "Your nickname has been reset because you changed your name.");
+                dp.setNick("" + ChatColor.WHITE.getChar());
+            }
+            
             player.setDisplayName(nick);
             player.setPlayerListName(nick);
             dp.setLastLogin(System.currentTimeMillis());

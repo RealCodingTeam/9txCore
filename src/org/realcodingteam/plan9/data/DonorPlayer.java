@@ -24,7 +24,7 @@ public class DonorPlayer {
     private UUID id;
     private int dp;
     private String nick;
-    private boolean hasReceivedDP;
+    private boolean hasReceivedDP, receiveEffects;
     private long lastLogin;
     private int rolls;
     
@@ -34,15 +34,17 @@ public class DonorPlayer {
         this.hasReceivedDP = false;
         this.nick = "f";
         this.rolls = 0;
+        this.receiveEffects = true;
         this.setLastLogin(System.currentTimeMillis());
     }
     
-    public DonorPlayer(UUID id, int dp, boolean hasReceivedDP, String nick, int rolls) {
+    public DonorPlayer(UUID id, int dp, boolean hasReceivedDP, String nick, int rolls, boolean effects) {
         this.id = id;
         this.dp = dp;
         this.hasReceivedDP = hasReceivedDP;
         this.nick = nick;
         this.rolls = rolls;
+        this.receiveEffects = effects;
         this.setLastLogin(System.currentTimeMillis());
     }
     
@@ -98,6 +100,14 @@ public class DonorPlayer {
         this.lastLogin = lastLogin;
     }
     
+    public boolean receivesEffects() {
+        return receiveEffects;
+    }
+    
+    public void setShouldReceiveEffects(boolean receiveEffects) {
+        this.receiveEffects = receiveEffects;
+    }
+    
     public static void onEnable() {
         if(!donors.isEmpty()) return;
         Bukkit.getOnlinePlayers().stream().map(player -> player.getUniqueId()).forEach(DonorPlayer::loadDonor);
@@ -129,7 +139,10 @@ public class DonorPlayer {
         if(!yaml.contains("rolls")) yaml.set("rolls", 0);
         int rolls = yaml.getInt("rolls");
         
-        DonorPlayer donor = new DonorPlayer(id, dp, has, c, rolls);
+        if(!yaml.contains("receive_effects")) yaml.set("receive_effects", true);
+        boolean effects = yaml.getBoolean("receive_effects");
+        
+        DonorPlayer donor = new DonorPlayer(id, dp, has, c, rolls, effects);
         
         donors.put(id, donor);
         return donor;
@@ -144,6 +157,7 @@ public class DonorPlayer {
             yaml.set("hasReceived", dp.hasReceivedDP()); 
             yaml.set("nick", dp.getNick());
             yaml.set("rolls", dp.getRolls());
+            yaml.set("receive_effects", dp.receivesEffects());
             donors.remove(dp.getId());
             
             try {

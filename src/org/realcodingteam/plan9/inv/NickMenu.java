@@ -10,6 +10,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.realcodingteam.plan9.data.DonorPlayer;
+import org.realcodingteam.plan9.data.RainbowWool;
 
 public class NickMenu extends AbstractMenu {
     
