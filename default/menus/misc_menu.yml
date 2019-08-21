@@ -1,0 +1,65 @@
+items:
+   feed:
+      name: "\u00A75Feed everyone - 5 DP"
+      category: "Misc"
+      slot: 0
+      cost: 5
+      amount: 1
+      material: "COOKIE"
+      lore:
+         - "\u00A7aSaturation"
+      script: "misc/feed.js"
+   heal:
+      name: "\u00A75Heal Everyone - 15 DP"
+      category: "Misc"
+      slot: 2
+      cost: 15
+      amount: 1
+      material: "GOLDEN_APPLE"
+      lore:
+         - "\u00A7aFull health"
+      script: "misc/heal.js"
+   night:
+      name: "\u00A75Set Time To Night - 100 DP"
+      dynamic: true
+      category: "Misc"
+      slot: 4
+      cost: 100
+      amount: 1
+      material: "CLOCK"
+      lore:
+         - "\u00A7aNight"
+      script: "misc/night.js"
+   day:
+      name: "\u00A75Set Time To Day - 10 DP"
+      dynamic: true
+      category: "Misc"
+      slot: 4
+      cost: 10
+      amount: 1
+      material: "SUNFLOWER"
+      lore:
+         - "\u00A7aDay"
+      script: "misc/day.js"
+   clear:
+      name: "\u00A75Set Weather To Clear - 10 DP"
+      dynamic: true
+      category: "Misc"
+      slot: 6
+      cost: 10
+      amount: 1
+      material: "BUCKET"
+      lore:
+         - "\u00A7aClear weather"
+      script: "misc/clear.js"
+   stormy:
+      name: "\u00A75Set Weather to Stormy - 75 DP"
+      dynamic: true
+      category: "Misc"
+      slot: 6
+      cost: 75
+      amount: 1
+      material: "WATER_BUCKET"
+      lore:
+         - "\u00A7aThunderstorm"
+      script: "misc/storm.js"
