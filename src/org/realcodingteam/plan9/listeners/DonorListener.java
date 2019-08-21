@@ -1,29 +1,22 @@
 package org.realcodingteam.plan9.listeners;
 
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 import org.realcodingteam.plan9.data.DonorPlayer;
 import org.realcodingteam.plan9.inv.AbstractMenu;
-import org.realcodingteam.plan9.inv.MiscMenu;
+import org.realcodingteam.plan9.inv.RootMenu;
 import org.realcodingteam.plan9.inv.SlotsMenu;
-import org.realcodingteam.plan9.inv.effects.ExpEffects;
-import org.realcodingteam.plan9.inv.effects.OreEffects;
 
 public class DonorListener implements Listener {
     
@@ -35,18 +28,13 @@ public class DonorListener implements Listener {
             event.setCancelled(true);
             AbstractMenu menu = (AbstractMenu) holder;
             
-            if(menu instanceof MiscMenu && SlotsMenu.handle(event)) {
+            if(menu instanceof RootMenu && SlotsMenu.handle(event)) {
                 event.setCancelled(true);
                 return;
             }
             
             //Filter out what kinds of click the AbstractMenu will see
-            if(event.getClick().isKeyboardClick()
-            || event.isShiftClick()
-            || event.getCurrentItem() == null 
-            || event.getCurrentItem().getType() == Material.AIR
-            || !event.getClickedInventory().equals(menu.getInventory())) 
-            {
+            if(event.getClick() != ClickType.LEFT || event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
                 return;
             }
             
@@ -64,31 +52,6 @@ public class DonorListener implements Listener {
     public void onInvClose(InventoryCloseEvent event) {
         InventoryHolder holder = event.getInventory().getHolder();
         if(holder instanceof AbstractMenu) ((AbstractMenu)holder).close((Player)event.getPlayer());
-    }
-
-    //Double ore drops (See OreEffects)
-    //Fortune does increase drops by a random amount
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-    public void onMineOre(BlockBreakEvent event) {
-        if(!OreEffects.isDoubleSmelt()) return;
-        if(event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
-        
-        ItemStack pick = event.getPlayer().getInventory().getItemInMainHand();
-        boolean fortune = pick != null && pick.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS);
-        
-        if (event.getBlock().getType().name().contains("ORE")) {
-            for (ItemStack is : event.getBlock().getDrops()) {
-                    event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), OreEffects.smelt(is, fortune));
-            }
-
-            event.setDropItems(false);
-        }
-    }
-    
-    //Double experience drops (See ExpEffects)
-    @EventHandler
-    public void onExperienceGained(PlayerExpChangeEvent event) {
-        if(ExpEffects.isDoubleExp()) event.setAmount(event.getAmount() * 2);
     }
 
     @EventHandler

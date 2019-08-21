@@ -9,9 +9,6 @@ public class PotionsMenu extends ScriptedMenu {
 
     public PotionsMenu(Player viewer) {
         super(Menu.POTIONS, 36, ChatColor.DARK_PURPLE + "Donor - Potion Effects", viewer, RootMenu::new);
-        
-        build();
-        open(viewer);
     }
 
     @Override

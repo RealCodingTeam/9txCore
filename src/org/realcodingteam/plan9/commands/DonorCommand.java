@@ -13,18 +13,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.realcodingteam.plan9.commands.subdonor.DonorAddSet;
-import org.realcodingteam.plan9.commands.subdonor.DonorHelp;
-import org.realcodingteam.plan9.commands.subdonor.DonorPay;
-import org.realcodingteam.plan9.commands.subdonor.DonorView;
-import org.realcodingteam.plan9.commands.subdonor.SubDonorCommand;
-import org.realcodingteam.plan9.inv.AbstractMenu;
-import org.realcodingteam.plan9.inv.ExpMenu;
+import org.realcodingteam.plan9.commands.subdonor.*;
+import org.realcodingteam.plan9.inv.*;
 import org.realcodingteam.plan9.inv.MiscMenu;
-import org.realcodingteam.plan9.inv.NickMenu;
-import org.realcodingteam.plan9.inv.OresMenu;
 import org.realcodingteam.plan9.inv.PotionsMenu;
-import org.realcodingteam.plan9.inv.RootMenu;
 
 public class DonorCommand implements CommandExecutor, TabCompleter {
 

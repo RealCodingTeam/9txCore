@@ -9,9 +9,6 @@ public class MiscMenu extends ScriptedMenu {
     
     public MiscMenu(Player viewer) {
         super(Menu.MISC, 9, ChatColor.DARK_PURPLE + "Donor - Misc", viewer, RootMenu::new);
-        
-        open(viewer);
-        build();
     }
 
     @Override

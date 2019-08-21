@@ -7,7 +7,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.realcodingteam.plan9.inv.AbstractMenu;
-import org.realcodingteam.plan9.inv.effects.Effects;
 
 public abstract class ScriptedMenu extends AbstractMenu {
 
@@ -16,6 +15,9 @@ public abstract class ScriptedMenu extends AbstractMenu {
     public ScriptedMenu(Menu category, int size, String title, Player viewer, Consumer<Player> parent) {
         super(size, title, viewer, parent);
         this.category = category;
+        
+        build();
+        open(viewer);
     }
     
     @Override

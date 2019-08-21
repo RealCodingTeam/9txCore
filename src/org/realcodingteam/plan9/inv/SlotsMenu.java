@@ -199,7 +199,7 @@ public final class SlotsMenu extends AbstractMenu {
     //internal
     public static boolean handle(InventoryClickEvent event) {
         loc++;
-        loc %= 9;
+        loc %= event.getInventory().getSize();
         
         if(!event.getClick().isShiftClick() || event.getSlot() != loc) return false;
         new SlotsMenu((Player)event.getWhoClicked());

@@ -4,11 +4,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
+import javax.script.*;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,14 +19,15 @@ import net.md_5.bungee.api.ChatColor;
 public final class ScriptManager {
 
     private static final File ROOT = new File(NtxPlugin.instance().getDataFolder(), "scripts");
+    protected static final Map<MenuEntry, ScriptEngine> contexts = new HashMap<>();
     
-    public static void run(Player runner, MenuEntry entry) {
-        ScriptEngine engine = getEngine();
+    protected static void run(Player runner, MenuEntry entry) {
+        ScriptEngine engine = getEngine(entry);
         
         try {
             engine.eval(getScript(entry.getScript()));
             Invocable script = (Invocable) engine;
-            script.invokeFunction("run");
+            script.invokeFunction("run", runner, entry.getCost());
         } catch(Exception exception) {
             runner.sendMessage(ChatColor.RED + "Something went wrong with this donor effect. You have been refunded your DP.");
             runner.sendMessage(ChatColor.RED + "Please inform an admin of this issue.");
@@ -49,12 +49,24 @@ public final class ScriptManager {
         }
     }
     
-    public static boolean shouldShow(MenuEntry entry) {
+    protected static void init(MenuEntry entry) {
+        ScriptEngine engine = getEngine(entry);
+        
+        try {
+            engine.eval(getScript(entry.getScript()));
+            Invocable script = (Invocable) engine;
+            script.invokeFunction("init");
+        } catch (ScriptException | FileNotFoundException  e) {
+            e.printStackTrace();
+        } catch(Exception ignored) {}
+    }
+    
+    protected static boolean shouldShow(MenuEntry entry) {
         //The "isDynamic" flag is an optimization
         //Speeds up menu building.
         if(!entry.isDynamic()) return true;
         
-        ScriptEngine engine = getEngine();
+        ScriptEngine engine = getEngine(entry);
         
         try {
             engine.eval(getScript(entry.getScript()));
@@ -68,15 +80,22 @@ public final class ScriptManager {
         return true;
     }
     
-    private static ScriptEngine getEngine() {
+    private static ScriptEngine getEngine(MenuEntry entry) {
+        if(contexts.containsKey(entry)) return contexts.get(entry);
+        
         ClassLoader loader = NtxPlugin.instance().getClass().getClassLoader();
         Thread.currentThread().setContextClassLoader(loader);
         
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("nashorn");
         
-        engine.put("SERVER", Bukkit.getServer());
+        Bindings bindings = engine.createBindings();
+        bindings.put("SERVER", Bukkit.getServer());
+        bindings.put("CTX", new ScriptContext());
+        bindings.put("Events", EventRegistrar.names);
+        engine.setBindings(bindings, javax.script.ScriptContext.GLOBAL_SCOPE);
         
+        contexts.put(entry, engine);
         return engine;
     }
     

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public enum Menu {
-    POTIONS("potions_menu.yml"), MISC("misc_menu.yml");
+    POTIONS("potions_menu.yml"), MISC("misc_menu.yml"), ORES("ores_menu.yml"), EXP("exp_menu.yml");
     
     private final String path;
     private final List<MenuEntry> entries;
@@ -16,6 +16,7 @@ public enum Menu {
     }
     
     public void addEntry(MenuEntry entry) {
+        ScriptManager.init(entry);
         entries.add(entry);
     }
     

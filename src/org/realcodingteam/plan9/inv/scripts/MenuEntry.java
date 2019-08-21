@@ -18,8 +18,6 @@ public final class MenuEntry {
     private final boolean dynamic;
     
     public MenuEntry(Menu category, String name, ItemStack item, int cost, int slot, String script, boolean dynamic) {
-        category.addEntry(this);
-        
         this.category = category;
         this.name = name;
         this.item = item;

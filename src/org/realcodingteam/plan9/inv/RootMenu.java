@@ -41,7 +41,7 @@ public final class RootMenu extends AbstractMenu {
         inv.setItem(15, makeItem(Material.BREWING_STAND,         "§5Potion Effects",   "§aGive everyone a cool effect!"));
         inv.setItem(17, makeItem(Material.COOKIE,                "§5Misc",             "§aDo other amazing stuff!"));
         
-        inv.setItem(24, getEffectsEnabledButton());
+        inv.setItem(inv.getSize() - 2, getEffectsEnabledButton());
     }
 
     @Override

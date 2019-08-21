@@ -3,6 +3,7 @@ package org.realcodingteam.plan9.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.realcodingteam.plan9.inv.scripts.EventRegistrar;
 import org.realcodingteam.plan9.inv.scripts.Menu;
 
 import net.md_5.bungee.api.ChatColor;
@@ -16,6 +17,7 @@ public final class ReloadCommand implements CommandExecutor {
             return true;
         }
         
+        EventRegistrar.unload();
         Menu.clearEntries();
         sender.sendMessage(ChatColor.YELLOW + "Menus reloaded.");
         return true;
