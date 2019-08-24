@@ -2,10 +2,7 @@ package org.realcodingteam.plan9.inv.scripts;
 
 import java.util.*;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.enchantment.EnchantItemEvent;
 import org.bukkit.event.enchantment.PrepareItemEnchantEvent;
@@ -21,8 +18,6 @@ import org.bukkit.event.weather.LightningStrikeEvent;
 import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.world.*;
-import org.bukkit.plugin.EventExecutor;
-import org.realcodingteam.plan9.NtxPlugin;
 
 public final class EventRegistrar {
     private static final List<Class<? extends Event>> EVENT_CLASSES = Collections.unmodifiableList(Arrays.asList(
@@ -69,38 +64,14 @@ public final class EventRegistrar {
             WorldInitEvent.class, WorldLoadEvent.class, WorldSaveEvent.class, WorldUnloadEvent.class));
 
     protected static final Map<String, String> names;
-    private static final List<ScriptContext> contexts = new ArrayList<>();
 
     static {
         Map<String, String> namesmut = new HashMap<>();
 
-        EventExecutor exec = new NtxEventExecutor();
         EVENT_CLASSES.forEach(event -> {
             namesmut.put(event.getSimpleName(), event.getCanonicalName());
-            Bukkit.getServer().getPluginManager().registerEvent(event, new Listener() {
-            }, EventPriority.HIGHEST, exec, NtxPlugin.instance(), true);
         });
 
         names = Collections.unmodifiableMap(namesmut);
-    }
-
-    protected static void register(ScriptContext context) {
-        contexts.add(context);
-    }
-
-    public static void unload() {
-        contexts.forEach(ScriptContext::reset);
-        contexts.clear();
-    }
-
-    private static final class NtxEventExecutor implements EventExecutor {
-
-        @Override
-        public void execute(Listener listener, Event event) {
-            for (ScriptContext context : contexts) {
-                context.callEvent(event);
-            }
-        }
-
     }
 }

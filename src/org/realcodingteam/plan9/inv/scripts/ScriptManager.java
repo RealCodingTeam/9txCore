@@ -92,6 +92,7 @@ public final class ScriptManager {
         Bindings bindings = engine.createBindings();
         bindings.put("SERVER", Bukkit.getServer());
         bindings.put("CTX", new ScriptContext());
+        bindings.put("PLAYERS", DonorPlayer.getAllPlayers());
         bindings.put("Events", EventRegistrar.names);
         engine.setBindings(bindings, javax.script.ScriptContext.GLOBAL_SCOPE);
         

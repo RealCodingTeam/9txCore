@@ -2,6 +2,7 @@ package org.realcodingteam.plan9.data;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -20,6 +21,10 @@ import org.realcodingteam.plan9.NtxPlugin;
 public class DonorPlayer {
     
     private static final Map<UUID, DonorPlayer> donors = new HashMap<>();
+    
+    public static Collection<DonorPlayer> getAllPlayers() {
+        return donors.values();
+    }
 
     private UUID id;
     private int dp;
