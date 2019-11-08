@@ -1,11 +1,10 @@
 package org.realcodingteam.plan9;
 
 import org.bukkit.plugin.java.JavaPlugin;
+import org.realcodingteam.plan9.commands.PatchCommand;
 import org.realcodingteam.plan9.commands.StaffChatCommand;
-import org.realcodingteam.plan9.listeners.DrownedDupeListener;
-import org.realcodingteam.plan9.listeners.NtxNerfListener;
 
-public class NtxPlugin extends JavaPlugin {
+public final class NtxPlugin extends JavaPlugin {
     
     private static NtxPlugin instance;
     
@@ -18,21 +17,13 @@ public class NtxPlugin extends JavaPlugin {
         instance = this;
         
         initConfig();
-        //register events
-        getServer().getPluginManager().registerEvents(new DrownedDupeListener(), this);      //Disables normal vanilla functionality
-        getServer().getPluginManager().registerEvents(new NtxNerfListener(), this);      //Disables normal vanilla functionality
         //register commands
         getCommand("staff").setExecutor(new StaffChatCommand());
+        getCommand("patch").setExecutor(new PatchCommand());
     }
     
     private void initConfig() {
         saveDefaultConfig();
-        
-        //Load enderpearl delay from config
-        if(!getConfig().contains("pearlcooldown") || !(getConfig().get("pearlcooldown") instanceof Long)) {
-            getConfig().set("pearlcooldown", 10);
-        }
-        
         saveConfig();
     }
 

@@ -1,5 +1,5 @@
 name: NtxCore
-main: me.daniel.ntx.NtxPlugin
+main: org.realcodingteam.plan9.NtxPlugin
 version: 1.0
 author: Danny
 api-version: 1.13
@@ -8,3 +8,6 @@ commands:
       description: Staff chat
       usage: /<command> [msg]
       aliases: [staffchat, schat, sc]
+   patch:
+      description: Patch command
+      usage: /<command> [subcommand]
