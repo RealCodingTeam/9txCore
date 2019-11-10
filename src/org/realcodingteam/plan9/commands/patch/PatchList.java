@@ -12,6 +12,7 @@ import org.realcodingteam.plan9.patches.TxPatch;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -50,6 +51,8 @@ public final class PatchList implements TxCommand {
     }
     
     private static void sendFancy(Player player, TxPatch[] patches) {
+        boolean isAdmin = player.hasPermission("ntx.admin");
+        
         player.sendMessage(ChatColor.BLUE + "Patches: (hover over for info)");
         for(TxPatch patch : patches) {
             Patch info = PatchManager.getPatchMetadata(patch);
@@ -57,7 +60,23 @@ public final class PatchList implements TxCommand {
             BaseComponent base = new TextComponent(info.display_name());
             base.setColor(color);
             
-            HoverEvent hover = new HoverEvent(Action.SHOW_TEXT, new BaseComponent[] { createPatchHover(patch) });
+            BaseComponent hoverText = createPatchHover(patch);
+            
+            if(isAdmin) {
+                BaseComponent[] extra = TextComponent.fromLegacyText(
+                        ChatColor.YELLOW + "\nClick me to " + 
+                        (patch.isEnabled()? ChatColor.RED + "disable" : ChatColor.GREEN + "enable") + 
+                        ChatColor.YELLOW + " this patch"
+                );
+                
+                for(BaseComponent comp : extra) {
+                    hoverText.addExtra(comp);
+                }
+                
+                base.setClickEvent(createClickEvent(patch));
+            }
+            
+            HoverEvent hover = new HoverEvent(Action.SHOW_TEXT, new BaseComponent[] { hoverText });
             base.setHoverEvent(hover);
             player.sendMessage(base);
         }
@@ -85,5 +104,15 @@ public final class PatchList implements TxCommand {
         base.addExtra(internal);
         
         return base;
+    }
+    
+    private static ClickEvent createClickEvent(TxPatch patch) {
+        StringBuilder command = new StringBuilder();
+        command.append("/patch ");
+        if(patch.isEnabled()) command.append("disable ");
+        else command.append("enable ");
+        command.append(PatchManager.getPatchMetadata(patch).internal_name());
+        
+        return new ClickEvent(ClickEvent.Action.RUN_COMMAND, command.toString());
     }
 }

@@ -8,8 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.realcodingteam.plan9.commands.TxCommand.Result;
-import org.realcodingteam.plan9.commands.patch.PatchHelp;
-import org.realcodingteam.plan9.commands.patch.PatchList;
+import org.realcodingteam.plan9.commands.patch.*;
 
 import net.md_5.bungee.api.ChatColor;
 
@@ -19,6 +18,9 @@ public final class PatchCommand implements CommandExecutor {
     static {
         commands.put("help", new PatchHelp());
         commands.put("list", new PatchList());
+        commands.put("enable", new PatchEnable());
+        commands.put("disable", new PatchDisable());
+        commands.put("reload", new PatchReload());
     }
     
     public static Map<String, TxCommand> getSubCommands() {
@@ -43,7 +45,7 @@ public final class PatchCommand implements CommandExecutor {
             case NO_PERMISSION:
                 sender.sendMessage(ChatColor.RED + "You lack permission.");
                 break;
-            case INTERNAL_ERROR:
+            case ERROR:
                 sender.sendMessage(ChatColor.RED + "Something went wrong executing this command. Please inform an admin of this issue.");
                 break;
             case SUCCESS:

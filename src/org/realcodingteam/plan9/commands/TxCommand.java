@@ -11,7 +11,7 @@ public interface TxCommand {
         SUCCESS,
         NO_PERMISSION,
         INVALID_SYNTAX,
-        INTERNAL_ERROR,
+        ERROR,
     }
     
 }

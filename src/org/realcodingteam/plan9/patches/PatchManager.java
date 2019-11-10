@@ -2,7 +2,9 @@ package org.realcodingteam.plan9.patches;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,27 +14,88 @@ import org.realcodingteam.plan9.NtxPlugin;
 public final class PatchManager {
     private static final Map<String, TxPatch> patches = new HashMap<>();
     
-    public static void enablePatch(TxPatch patch) {
-        Patch info = getPatchMetadata(patch);
+    /**
+     * Return a registered patch by internal ID, or {@link Optional#empty()}
+     */
+    public static Optional<TxPatch> getPatchById(String internal_id) {
+        Validate.notNull(internal_id);
         
-        if(patches.containsKey(info.internal_name())) {
-            throw new IllegalArgumentException("This patch has already been registered: " + info.internal_name());
-        }
-        
-        patches.put(info.internal_name(), patch);
-        patch.onEnable(getRootConfigNode(info));
-        Bukkit.getPluginManager().registerEvents(patch, NtxPlugin.instance());
+        return Optional.ofNullable(patches.get(internal_id));
     }
     
-    public static void disablePatch(TxPatch patch) {
-        if(!patches.containsKey(getPatchMetadata(patch).internal_name())) return;
+    /**
+     * Load a patch into the system. This is called as a side effect
+     * of {@link PatchManager#enablePatch(TxPatch)}
+     */
+    public static void loadPatch(TxPatch patch) {
+        Validate.notNull(patch);
+        if(isEnabled(patch)) return;
         
-        patch.onDisable(getRootConfigNode(getPatchMetadata(patch)));
+        Patch info = getPatchMetadata(patch);
+        patches.put(info.internal_name(), patch);
+        patch.loadConfig(getRootConfigNode(patch));
+    }
+    
+    /**
+     * Calls {@link TxPatch#loadConfig(ConfigurationSection)} on all registered patches
+     */
+    public static void reloadConfigForPatches() {
+        for(TxPatch patch : getPatches()) {
+            patch.loadConfig(getRootConfigNode(patch));
+        }
+    }
+    
+    /**
+     * Unload a patch from the system. This should be called
+     * when your plugin's onDisable is called to remove inactive patches.
+     */
+    public static void unloadPatch(TxPatch patch) {
+        Validate.notNull(patch);
+        if(!isEnabled(patch)) return;
+        
+        patch.onDisable();
         patches.remove(getPatchMetadata(patch).internal_name());
         unregisterEvents(patch);
     }
     
+    /**
+     * Enables a patch and registers event handlers.
+     * Calls {@link PatchManager#loadPatch(TxPatch)} as a side effect.
+     */
+    public static void enablePatch(TxPatch patch) {
+        Validate.notNull(patch);
+        if(isEnabled(patch)) return;
+        loadPatch(patch);
+        
+        if(!getRootConfigNode(patch).getBoolean("enabled")) return;
+        patch.onEnable();
+        Bukkit.getPluginManager().registerEvents(patch, NtxPlugin.instance());
+    }
+    
+    public static void forceEnable(TxPatch patch) {
+        Validate.notNull(patch);
+        loadPatch(patch);
+        getRootConfigNode(patch).set("enabled", true);
+        NtxPlugin.instance().saveConfig();
+        enablePatch(patch);
+    }
+    
+    /**
+     * Disables a patch, but keeps it in the system.
+     * Unregisters event handlers and calls {@link TxPatch#onDisable(ConfigurationSection)} 
+     */
+    public static void disablePatch(TxPatch patch) {
+        Validate.notNull(patch);
+        if(!isEnabled(patch)) return;
+        
+        unregisterEvents(patch);
+        patch.onDisable();
+        getRootConfigNode(patch).set("enabled", false);
+        NtxPlugin.instance().saveConfig();
+    }
+    
     public static boolean isEnabled(TxPatch patch) {
+        Validate.notNull(patch);
         Patch info = getPatchMetadata(patch);
         return patches.containsKey(info.internal_name()) && patches.get(info.internal_name()).isEnabled();
     }
@@ -41,11 +104,8 @@ public final class PatchManager {
         return patches.values().toArray(new TxPatch[0]);
     }
     
-    private static void unregisterEvents(TxPatch patch) {
-        HandlerList.unregisterAll(patch); //not-null handled by spigot methods
-    }
-    
     public static Patch getPatchMetadata(TxPatch patch) {
+        Validate.notNull(patch);
         Patch info = patch.getClass().getAnnotation(Patch.class);
         if(info == null) {
             throw new IllegalArgumentException("Patches must be annotated by org.realcodingteam.plan9.patches.Patch");
@@ -54,8 +114,15 @@ public final class PatchManager {
         return info;
     }
     
-    private static ConfigurationSection getRootConfigNode(Patch info) {
+    private static void unregisterEvents(TxPatch patch) {
+        Validate.notNull(patch);
+        HandlerList.unregisterAll(patch); //not-null handled by spigot methods
+    }
+    
+    private static ConfigurationSection getRootConfigNode(TxPatch patch) {
+        Validate.notNull(patch);
         FileConfiguration config = NtxPlugin.instance().getConfig();
+        Patch info = getPatchMetadata(patch);
         
         if(config.getConfigurationSection(info.internal_name()) == null) {
             config.createSection(info.internal_name());
@@ -63,8 +130,12 @@ public final class PatchManager {
         }
         
         ConfigurationSection root = config.getConfigurationSection(info.internal_name());
-        root.set("enabled", true);
-        NtxPlugin.instance().saveConfig();
+        
+        if(!root.isSet("enabled")) {
+            root.set("enabled", true);
+            NtxPlugin.instance().saveConfig();
+        }
+        
         return root;
     }
 }
