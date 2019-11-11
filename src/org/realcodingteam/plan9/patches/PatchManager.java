@@ -1,8 +1,6 @@
 package org.realcodingteam.plan9.patches;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
@@ -31,7 +29,7 @@ public final class PatchManager {
         Validate.notNull(patch);
         if(isEnabled(patch)) return;
         
-        Patch info = getPatchMetadata(patch);
+        Patch info = patch.getMetadata();
         patches.put(info.internal_name(), patch);
         patch.loadConfig(getRootConfigNode(patch));
     }
@@ -54,7 +52,7 @@ public final class PatchManager {
         if(!isEnabled(patch)) return;
         
         patch.onDisable();
-        patches.remove(getPatchMetadata(patch).internal_name());
+        patches.remove(patch.getMetadata().internal_name());
         unregisterEvents(patch);
     }
     
@@ -96,33 +94,23 @@ public final class PatchManager {
     
     public static boolean isEnabled(TxPatch patch) {
         Validate.notNull(patch);
-        Patch info = getPatchMetadata(patch);
+        Patch info = patch.getMetadata();
         return patches.containsKey(info.internal_name()) && patches.get(info.internal_name()).isEnabled();
     }
     
-    public static TxPatch[] getPatches() {
-        return patches.values().toArray(new TxPatch[0]);
-    }
-    
-    public static Patch getPatchMetadata(TxPatch patch) {
-        Validate.notNull(patch);
-        Patch info = patch.getClass().getAnnotation(Patch.class);
-        if(info == null) {
-            throw new IllegalArgumentException("Patches must be annotated by org.realcodingteam.plan9.patches.Patch");
-        }
-        
-        return info;
+    public static Collection<TxPatch> getPatches() {
+        return Collections.unmodifiableCollection(patches.values());
     }
     
     private static void unregisterEvents(TxPatch patch) {
         Validate.notNull(patch);
-        HandlerList.unregisterAll(patch); //not-null handled by spigot methods
+        HandlerList.unregisterAll(patch);
     }
     
     private static ConfigurationSection getRootConfigNode(TxPatch patch) {
         Validate.notNull(patch);
         FileConfiguration config = NtxPlugin.instance().getConfig();
-        Patch info = getPatchMetadata(patch);
+        Patch info = patch.getMetadata();
         
         if(config.getConfigurationSection(info.internal_name()) == null) {
             config.createSection(info.internal_name());

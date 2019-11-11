@@ -1,18 +1,15 @@
 package org.realcodingteam.plan9.commands;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.realcodingteam.plan9.commands.TxCommand.Result;
+import org.bukkit.command.TabCompleter;
 import org.realcodingteam.plan9.commands.patch.*;
 
-import net.md_5.bungee.api.ChatColor;
-
-public final class PatchCommand implements CommandExecutor {
+public final class PatchCommand implements CommandExecutor, TabCompleter {
     
     private static final Map<String, TxCommand> commands = new HashMap<>();
     static {
@@ -34,25 +31,36 @@ public final class PatchCommand implements CommandExecutor {
             return true;
         }
         
-        String[] shifted = new String[args.length - 1];
-        System.arraycopy(args, 1, shifted, 0, args.length - 1);
-        
-        Result status = commands.get(args[0].toLowerCase()).execute(sender, shifted);
-        switch(status) {
-            case INVALID_SYNTAX:
-                sender.sendMessage(ChatColor.RED + "Invalid command syntax. See patch help command for help.");
-                break;
-            case NO_PERMISSION:
-                sender.sendMessage(ChatColor.RED + "You lack permission.");
-                break;
-            case ERROR:
-                sender.sendMessage(ChatColor.RED + "Something went wrong executing this command. Please inform an admin of this issue.");
-                break;
-            case SUCCESS:
-                break;
-        }
-        
+        Result status = commands.get(args[0].toLowerCase()).execute(sender, popArray(args));
+        if(!status.message.isEmpty()) sender.sendMessage(status.message);
         return true;
     }
+
+    @Override
+    public List<String> onTabComplete(CommandSender executor, Command command, String label, String[] args) {
+        switch(args.length) {
+            case 0:
+                return new ArrayList<>(commands.keySet());
+            case 1:
+                return commands.keySet()
+                        .stream()
+                        .map(String::toLowerCase)
+                        .filter(cmd -> cmd.startsWith(args[0].toLowerCase()) || args[0].trim().isEmpty())
+                        .collect(Collectors.toList());
+            case 2:
+                if(!commands.containsKey(args[0].toLowerCase())) break;
+                
+                return commands.get(args[0].toLowerCase()).getCompletions(executor, popArray(args));
+        }
+        
+        return null;
+    }
     
+    private static String[] popArray(String[] original) {
+        if(original == null || original.length < 1) return new String[0];
+        
+        String[] shifted = new String[original.length - 1];
+        System.arraycopy(original, 1, shifted, 0, original.length - 1);
+        return shifted;
+    }
 }

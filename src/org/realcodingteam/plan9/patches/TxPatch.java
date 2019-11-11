@@ -5,10 +5,19 @@ import org.bukkit.event.Listener;
 
 public interface TxPatch extends Listener {
     
+    public default Patch getMetadata() {
+        Patch info = this.getClass().getAnnotation(Patch.class);
+        if(info == null) {
+            throw new IllegalArgumentException("Patches must be annotated by org.realcodingteam.plan9.patches.Patch");
+        }
+        
+        return info;
+    }
+    
     /**
      * Load anything from configuration
      */
-    public void loadConfig(ConfigurationSection config);
+    public default void loadConfig(ConfigurationSection config) {}
     
     /**
      * Save any configuration options to the plugin's config

@@ -1,10 +1,10 @@
 package org.realcodingteam.plan9.commands.patch;
 
-import static org.realcodingteam.plan9.commands.TxCommand.Result.NO_PERMISSION;
-import static org.realcodingteam.plan9.commands.TxCommand.Result.SUCCESS;
+import java.util.Collection;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.realcodingteam.plan9.commands.Result;
 import org.realcodingteam.plan9.commands.TxCommand;
 import org.realcodingteam.plan9.patches.Patch;
 import org.realcodingteam.plan9.patches.PatchManager;
@@ -27,35 +27,35 @@ public final class PatchList implements TxCommand {
     @Override
     public Result execute(CommandSender executor, String[] args) {
         if(!executor.hasPermission("ntx.patch.list")) {
-            return NO_PERMISSION;
+            return Result.NO_PERMISSION;
         }
         
-        TxPatch[] patches = PatchManager.getPatches();
+        Collection<TxPatch> patches = PatchManager.getPatches();
         if(!(executor instanceof Player) || args.length >= 1) {
             sendBoring(executor, patches);
         } else {
             sendFancy((Player) executor, patches);
         }
-        return SUCCESS;
+        return Result.SUCCESS;
     }
     
-    private static void sendBoring(CommandSender executor, TxPatch[] patches) {
+    private static void sendBoring(CommandSender executor, Collection<TxPatch> patches) {
         executor.sendMessage(ChatColor.BLUE + "Patches:");
         String format = "%s%s %s(%s by %s) %s- %s";
         for(TxPatch patch : patches) {
-            Patch info = PatchManager.getPatchMetadata(patch);
+            Patch info = patch.getMetadata();
             ChatColor color = PatchManager.isEnabled(patch)? ChatColor.DARK_GREEN : ChatColor.DARK_RED;
             executor.sendMessage(color + String.format(format, color, info.display_name(), ChatColor.WHITE, info.internal_name(), info.author(), ChatColor.GRAY, info.description()));
         }
         executor.sendMessage("");
     }
     
-    private static void sendFancy(Player player, TxPatch[] patches) {
+    private static void sendFancy(Player player, Collection<TxPatch> patches) {
         boolean isAdmin = player.hasPermission("ntx.admin");
         
-        player.sendMessage(ChatColor.BLUE + "Patches: (hover over for info)");
+        player.sendMessage(ChatColor.BLUE + "Patches (hover over for info):");
         for(TxPatch patch : patches) {
-            Patch info = PatchManager.getPatchMetadata(patch);
+            Patch info = patch.getMetadata();
             ChatColor color = PatchManager.isEnabled(patch)? ChatColor.DARK_GREEN : ChatColor.DARK_RED;
             BaseComponent base = new TextComponent(info.display_name());
             base.setColor(color);
@@ -80,12 +80,11 @@ public final class PatchList implements TxCommand {
             base.setHoverEvent(hover);
             player.sendMessage(base);
         }
-        player.sendMessage("");
     }
     
     private static BaseComponent createPatchHover(TxPatch patch) {
         ChatColor color = PatchManager.isEnabled(patch)? ChatColor.DARK_GREEN : ChatColor.DARK_RED;
-        Patch info = PatchManager.getPatchMetadata(patch);
+        Patch info = patch.getMetadata();
         BaseComponent base = new TextComponent(info.display_name() + "\n");
         base.setColor(color);
         
@@ -111,7 +110,7 @@ public final class PatchList implements TxCommand {
         command.append("/patch ");
         if(patch.isEnabled()) command.append("disable ");
         else command.append("enable ");
-        command.append(PatchManager.getPatchMetadata(patch).internal_name());
+        command.append(patch.getMetadata().internal_name());
         
         return new ClickEvent(ClickEvent.Action.RUN_COMMAND, command.toString());
     }
