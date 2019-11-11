@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.realcodingteam.plan9.commands.patch.*;
+import org.realcodingteam.plan9.commands.patch.PatchToggle.CommandMode;
 
 public final class PatchCommand implements CommandExecutor, TabCompleter {
     
@@ -15,8 +16,9 @@ public final class PatchCommand implements CommandExecutor, TabCompleter {
     static {
         commands.put("help", new PatchHelp());
         commands.put("list", new PatchList());
-        commands.put("enable", new PatchEnable());
-        commands.put("disable", new PatchDisable());
+        commands.put("enable", new PatchToggle(CommandMode.ENABLE));
+        commands.put("disable", new PatchToggle(CommandMode.DISABLE));
+        commands.put("toggle", new PatchToggle(CommandMode.TOGGLE));
         commands.put("reload", new PatchReload());
     }
     

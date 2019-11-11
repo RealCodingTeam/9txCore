@@ -45,7 +45,7 @@ public final class PatchList implements TxCommand {
         for(TxPatch patch : patches) {
             Patch info = patch.getMetadata();
             ChatColor color = PatchManager.isEnabled(patch)? ChatColor.DARK_GREEN : ChatColor.DARK_RED;
-            executor.sendMessage(color + String.format(format, color, info.display_name(), ChatColor.WHITE, info.internal_name(), info.author(), ChatColor.GRAY, info.description()));
+            executor.sendMessage(String.format(format, color, info.display_name(), ChatColor.WHITE, info.internal_name(), info.author(), ChatColor.GRAY, info.description()));
         }
         executor.sendMessage("");
     }
@@ -108,8 +108,7 @@ public final class PatchList implements TxCommand {
     private static ClickEvent createClickEvent(TxPatch patch) {
         StringBuilder command = new StringBuilder();
         command.append("/patch ");
-        if(patch.isEnabled()) command.append("disable ");
-        else command.append("enable ");
+        command.append("toggle ");
         command.append(patch.getMetadata().internal_name());
         
         return new ClickEvent(ClickEvent.Action.RUN_COMMAND, command.toString());
