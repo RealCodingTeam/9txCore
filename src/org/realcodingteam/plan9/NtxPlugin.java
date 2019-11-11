@@ -16,15 +16,9 @@ public final class NtxPlugin extends JavaPlugin {
     public void onEnable() {
         instance = this;
         
-        initConfig();
         //register commands
         getCommand("staff").setExecutor(new StaffChatCommand());
         getCommand("patch").setExecutor(new PatchCommand());
-    }
-    
-    private void initConfig() {
-        saveDefaultConfig();
-        saveConfig();
     }
 
 }

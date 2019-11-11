@@ -5,7 +5,6 @@ import java.util.*;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.realcodingteam.plan9.NtxPlugin;
 
@@ -31,7 +30,8 @@ public final class PatchManager {
         
         Patch info = patch.getMetadata();
         patches.put(info.internal_name(), patch);
-        patch.loadConfig(getRootConfigNode(patch));
+        patch.loadConfig(PatchConfigManager.getConfig(patch));
+        PatchConfigManager.saveConfig(patch);
     }
     
     /**
@@ -39,7 +39,8 @@ public final class PatchManager {
      */
     public static void reloadConfigForPatches() {
         for(TxPatch patch : getPatches()) {
-            patch.loadConfig(getRootConfigNode(patch));
+            patch.loadConfig(PatchConfigManager.getConfig(patch));
+            PatchConfigManager.saveConfig(patch);
         }
     }
     
@@ -65,7 +66,7 @@ public final class PatchManager {
         if(isEnabled(patch)) return;
         loadPatch(patch);
         
-        if(!getRootConfigNode(patch).getBoolean("enabled")) return;
+        if(!PatchConfigManager.getConfig(patch).getBoolean("enabled")) return;
         patch.onEnable();
         Bukkit.getPluginManager().registerEvents(patch, NtxPlugin.instance());
     }
@@ -73,8 +74,8 @@ public final class PatchManager {
     public static void forceEnable(TxPatch patch) {
         Validate.notNull(patch);
         loadPatch(patch);
-        getRootConfigNode(patch).set("enabled", true);
-        NtxPlugin.instance().saveConfig();
+        PatchConfigManager.getConfig(patch).set("enabled", true);
+        PatchConfigManager.saveConfig(patch);
         enablePatch(patch);
     }
     
@@ -88,8 +89,8 @@ public final class PatchManager {
         
         unregisterEvents(patch);
         patch.onDisable();
-        getRootConfigNode(patch).set("enabled", false);
-        NtxPlugin.instance().saveConfig();
+        PatchConfigManager.getConfig(patch).set("enabled", false);
+        PatchConfigManager.saveConfig(patch);
     }
     
     public static boolean isEnabled(TxPatch patch) {
@@ -105,25 +106,5 @@ public final class PatchManager {
     private static void unregisterEvents(TxPatch patch) {
         Validate.notNull(patch);
         HandlerList.unregisterAll(patch);
-    }
-    
-    private static ConfigurationSection getRootConfigNode(TxPatch patch) {
-        Validate.notNull(patch);
-        FileConfiguration config = NtxPlugin.instance().getConfig();
-        Patch info = patch.getMetadata();
-        
-        if(config.getConfigurationSection(info.internal_name()) == null) {
-            config.createSection(info.internal_name());
-            NtxPlugin.instance().saveConfig();
-        }
-        
-        ConfigurationSection root = config.getConfigurationSection(info.internal_name());
-        
-        if(!root.isSet("enabled")) {
-            root.set("enabled", true);
-            NtxPlugin.instance().saveConfig();
-        }
-        
-        return root;
     }
 }
