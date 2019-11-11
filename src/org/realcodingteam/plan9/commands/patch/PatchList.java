@@ -18,7 +18,7 @@ import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.TextComponent;
 
 public final class PatchList implements TxCommand {
-
+    
     @Override
     public String usage() {
         return "[basic]";
@@ -65,7 +65,7 @@ public final class PatchList implements TxCommand {
             if(isAdmin) {
                 BaseComponent[] extra = TextComponent.fromLegacyText(
                         ChatColor.YELLOW + "\nClick me to " + 
-                        (patch.isEnabled()? ChatColor.RED + "disable" : ChatColor.GREEN + "enable") + 
+                        (patch.isEnabled()? ChatColor.DARK_RED + "disable" : ChatColor.DARK_GREEN + "enable") + 
                         ChatColor.YELLOW + " this patch"
                 );
                 
